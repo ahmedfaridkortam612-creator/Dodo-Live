@@ -25,11 +25,9 @@ jobs:
 
       - name: Install Dependencies
         run: flutter pub get
-        working-directory: . # لو الملفات في مجلد فرعي، اكتب اسم المجلد هنا بدل النقطة مثلًا Dodo-Live
 
       - name: Build APK
         run: flutter build apk --release
-        working-directory: .
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
