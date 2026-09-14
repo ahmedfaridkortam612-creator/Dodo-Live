@@ -1,0 +1,124 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import '../../core/theme/app_colors.dart';
+import 'models/live_room_summary.dart';
+import 'widgets/live_room_card.dart';
+
+/// Home tab: a scrollable grid of live rooms, grouped by category chips.
+/// This reads from mock data — wire up to GET /api/streams in production.
+class LiveFeedScreen extends StatefulWidget {
+  const LiveFeedScreen({super.key});
+
+  @override
+  State<LiveFeedScreen> createState() => _LiveFeedScreenState();
+}
+
+class _LiveFeedScreenState extends State<LiveFeedScreen> {
+  int _categoryIndex = 0;
+  final _categories = const ['For You', 'Nearby', 'PK Battles', 'Music', 'Gaming', 'Chat'];
+
+  @override
+  Widget build(BuildContext context) {
+    final rooms = LiveRoomSummary.mockFeed();
+    return SafeArea(
+      child: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 12, 20, 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Dodo Live', style: Theme.of(context).textTheme.headlineSmall),
+                  Row(
+                    children: [
+                      _CoinPill(),
+                      const SizedBox(width: 10),
+                      const Icon(Icons.search, color: AppColors.textSecondary),
+                      const SizedBox(width: 14),
+                      const Icon(Icons.notifications_none_rounded,
+                          color: AppColors.textSecondary),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: SizedBox(
+              height: 44,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                itemCount: _categories.length,
+                separatorBuilder: (_, __) => const SizedBox(width: 8),
+                itemBuilder: (context, i) {
+                  final selected = i == _categoryIndex;
+                  return ChoiceChip(
+                    label: Text(_categories[i]),
+                    selected: selected,
+                    onSelected: (_) => setState(() => _categoryIndex = i),
+                    backgroundColor: AppColors.surface,
+                    selectedColor: AppColors.gold,
+                    labelStyle: TextStyle(
+                      color: selected ? AppColors.stage : AppColors.textSecondary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      side: BorderSide(
+                        color: selected ? Colors.transparent : AppColors.surfaceLine,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.all(16),
+            sliver: SliverGrid(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 12,
+                crossAxisSpacing: 12,
+                childAspectRatio: 0.72,
+              ),
+              delegate: SliverChildBuilderDelegate(
+                (context, i) => LiveRoomCard(
+                  room: rooms[i],
+                  onTap: () => context.push('/live/${rooms[i].id}'),
+                ),
+                childCount: rooms.length,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CoinPill extends StatelessWidget {
+  const _CoinPill();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.surfaceLine),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.monetization_on, color: AppColors.gold, size: 16),
+          const SizedBox(width: 4),
+          Text('12,480', style: Theme.of(context).textTheme.bodySmall),
+        ],
+      ),
+    );
+  }
+}
