@@ -1,0 +1,68 @@
+class LiveRoomSummary {
+  final String id;
+  final String hostName;
+  final String hostAvatarUrl;
+  final String coverUrl;
+  final int viewerCount;
+  final bool isPkBattle;
+  final bool isAudioOnly;
+
+  const LiveRoomSummary({
+    required this.id,
+    required this.hostName,
+    required this.hostAvatarUrl,
+    required this.coverUrl,
+    required this.viewerCount,
+    this.isPkBattle = false,
+    this.isAudioOnly = false,
+  });
+
+  static List<LiveRoomSummary> mockFeed() => [
+        const LiveRoomSummary(
+          id: 'r1',
+          hostName: 'Mira',
+          hostAvatarUrl: '',
+          coverUrl: '',
+          viewerCount: 2341,
+          isPkBattle: true,
+        ),
+        const LiveRoomSummary(
+          id: 'r2',
+          hostName: 'Kenji',
+          hostAvatarUrl: '',
+          coverUrl: '',
+          viewerCount: 892,
+        ),
+        const LiveRoomSummary(
+          id: 'r3',
+          hostName: 'Luna Beats',
+          hostAvatarUrl: '',
+          coverUrl: '',
+          viewerCount: 154,
+          isAudioOnly: true,
+        ),
+        const LiveRoomSummary(
+          id: 'r4',
+          hostName: 'DJ Rex',
+          hostAvatarUrl: '',
+          coverUrl: '',
+          viewerCount: 5108,
+          isPkBattle: true,
+        ),
+        const LiveRoomSummary(
+          id: 'r5',
+          hostName: 'Ava',
+          hostAvatarUrl: '',
+          coverUrl: '',
+          viewerCount: 310,
+        ),
+        const LiveRoomSummary(
+          id: 'r6',
+          hostName: 'Night Owls',
+          hostAvatarUrl: '',
+          coverUrl: '',
+          viewerCount: 77,
+          isAudioOnly: true,
+        ),
+      ];
+}
