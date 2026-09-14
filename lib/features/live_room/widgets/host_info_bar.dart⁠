@@ -1,0 +1,85 @@
+import 'package:flutter/material.dart';
+import '../../../core/theme/app_colors.dart';
+
+class TopHostBar extends StatelessWidget {
+  const TopHostBar({
+    super.key,
+    required this.hostName,
+    required this.viewerCount,
+    required this.onClose,
+    required this.onChallengePk,
+  });
+
+  final String hostName;
+  final int viewerCount;
+  final VoidCallback onClose;
+  final VoidCallback onChallengePk;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(3),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: AppColors.liveGradient,
+            ),
+            child: const CircleAvatar(radius: 18, backgroundColor: AppColors.surfaceRaised),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(hostName,
+                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 13)),
+                Text('$viewerCount watching',
+                    style: const TextStyle(color: Colors.white60, fontSize: 11)),
+              ],
+            ),
+          ),
+          _PillButton(icon: Icons.bolt_rounded, label: 'PK', onTap: onChallengePk, color: AppColors.pkRed),
+          const SizedBox(width: 8),
+          GestureDetector(
+            onTap: onClose,
+            child: const CircleAvatar(
+              radius: 16,
+              backgroundColor: Colors.black38,
+              child: Icon(Icons.close, color: Colors.white, size: 16),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PillButton extends StatelessWidget {
+  const _PillButton({required this.icon, required this.label, required this.onTap, required this.color});
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(16)),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 13, color: Colors.white),
+            const SizedBox(width: 3),
+            Text(label, style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w700)),
+          ],
+        ),
+      ),
+    );
+  }
+}
