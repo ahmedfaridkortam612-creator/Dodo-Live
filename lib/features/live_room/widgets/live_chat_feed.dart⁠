@@ -1,0 +1,91 @@
+import 'package:flutter/material.dart';
+import '../../../core/theme/app_colors.dart';
+
+class ChatMessage {
+  final String username;
+  final String text;
+  final ChatMessageType type;
+  const ChatMessage(this.username, this.text, [this.type = ChatMessageType.chat]);
+}
+
+enum ChatMessageType { chat, gift, join, system }
+
+/// Live chat overlay. In production this subscribes to the room's socket
+/// channel (see backend/src/routes/streams.js websocket events) and appends
+/// incoming messages; mocked here with static sample content.
+class LiveChatFeed extends StatelessWidget {
+  const LiveChatFeed({super.key});
+
+  static const _messages = [
+    ChatMessage('system', 'Welcome to the room!', ChatMessageType.system),
+    ChatMessage('Kenji', 'joined', ChatMessageType.join),
+    ChatMessage('Ava', 'hey everyone 👋'),
+    ChatMessage('Luna', 'sent Rose ×5', ChatMessageType.gift),
+    ChatMessage('Rex', 'this beat is fire'),
+    ChatMessage('Mira', 'thanks for the love!'),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return ShaderMask(
+      shaderCallback: (rect) => const LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [Colors.transparent, Colors.black, Colors.black],
+        stops: [0.0, 0.15, 1.0],
+      ).createShader(rect),
+      blendMode: BlendMode.dstIn,
+      child: ListView.builder(
+        reverse: false,
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        itemCount: _messages.length,
+        itemBuilder: (context, i) => _MessageRow(message: _messages[i]),
+      ),
+    );
+  }
+}
+
+class _MessageRow extends StatelessWidget {
+  const _MessageRow({required this.message});
+  final ChatMessage message;
+
+  @override
+  Widget build(BuildContext context) {
+    Color badgeColor;
+    switch (message.type) {
+      case ChatMessageType.gift:
+        badgeColor = AppColors.magenta;
+        break;
+      case ChatMessageType.join:
+        badgeColor = AppColors.teal;
+        break;
+      case ChatMessageType.system:
+        badgeColor = AppColors.textMuted;
+        break;
+      case ChatMessageType.chat:
+        badgeColor = AppColors.gold;
+    }
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.32),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: RichText(
+          text: TextSpan(
+            style: const TextStyle(fontSize: 12.5, color: Colors.white),
+            children: [
+              TextSpan(
+                text: '${message.username}  ',
+                style: TextStyle(color: badgeColor, fontWeight: FontWeight.w700),
+              ),
+              TextSpan(text: message.text, style: const TextStyle(color: Colors.white70)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
