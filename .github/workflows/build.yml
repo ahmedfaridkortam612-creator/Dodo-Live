@@ -24,13 +24,13 @@ jobs:
           cache: true
 
       - name: Install Dependencies
-        run: cd Dodo-Live && flutter pub get
+        run: flutter pub get
 
       - name: Build APK
-        run: cd Dodo-Live && flutter build apk --release
+        run: flutter build apk --release
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: Dodo-Live/build/app/outputs/flutter-apk/app-release.apk
+          path: build/app/outputs/flutter-apk/app-release.apk
