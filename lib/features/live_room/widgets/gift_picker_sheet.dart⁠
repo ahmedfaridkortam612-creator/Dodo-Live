@@ -1,0 +1,119 @@
+import 'package:flutter/material.dart';
+import '../../../core/theme/app_colors.dart';
+import '../models/virtual_gift.dart';
+
+class GiftPanel extends StatefulWidget {
+  const GiftPanel({super.key, required this.onGiftSent});
+
+  final ValueChanged<VirtualGift> onGiftSent;
+
+  @override
+  State<GiftPanel> createState() => _GiftPanelState();
+}
+
+class _GiftPanelState extends State<GiftPanel> {
+  VirtualGift? _selected;
+  int _walletBalance = 12480; // TODO: read from wallet provider
+
+  @override
+  Widget build(BuildContext context) {
+    return DraggableScrollableSheet(
+      initialChildSize: 0.5,
+      minChildSize: 0.35,
+      maxChildSize: 0.85,
+      builder: (context, scrollController) {
+        return Container(
+          decoration: const BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
+          ),
+          child: Column(
+            children: [
+              const SizedBox(height: 10),
+              Container(width: 40, height: 4, decoration: BoxDecoration(
+                color: AppColors.surfaceLine, borderRadius: BorderRadius.circular(2),
+              )),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(18, 14, 18, 4),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Send a gift', style: Theme.of(context).textTheme.titleLarge),
+                    Row(
+                      children: [
+                        const Icon(Icons.monetization_on, color: AppColors.gold, size: 16),
+                        const SizedBox(width: 4),
+                        Text('$_walletBalance', style: Theme.of(context).textTheme.bodyMedium),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: GridView.builder(
+                  controller: scrollController,
+                  padding: const EdgeInsets.all(16),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4,
+                    mainAxisSpacing: 12,
+                    crossAxisSpacing: 12,
+                    childAspectRatio: 0.8,
+                  ),
+                  itemCount: VirtualGift.catalog.length,
+                  itemBuilder: (context, i) {
+                    final gift = VirtualGift.catalog[i];
+                    final selected = gift.id == _selected?.id;
+                    return GestureDetector(
+                      onTap: () => setState(() => _selected = gift),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: selected ? AppColors.gold.withOpacity(0.15) : AppColors.surfaceRaised,
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: selected ? AppColors.gold : Colors.transparent, width: 1.5),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              gift.tier == GiftTier.luxury
+                                  ? Icons.auto_awesome
+                                  : gift.tier == GiftTier.premium
+                                      ? Icons.diamond
+                                      : Icons.local_florist,
+                              color: gift.tier == GiftTier.luxury
+                                  ? AppColors.magenta
+                                  : gift.tier == GiftTier.premium
+                                      ? AppColors.violet
+                                      : AppColors.gold,
+                              size: 28,
+                            ),
+                            const SizedBox(height: 6),
+                            Text(gift.name, style: const TextStyle(fontSize: 11, color: AppColors.textPrimary)),
+                            const SizedBox(height: 2),
+                            Text('${gift.coinCost}',
+                                style: const TextStyle(fontSize: 10, color: AppColors.gold, fontWeight: FontWeight.w600)),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: ElevatedButton(
+                    onPressed: _selected == null ? null : () => widget.onGiftSent(_selected!),
+                    child: Text(_selected == null ? 'Select a gift' : 'Send ${_selected!.name}'),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
