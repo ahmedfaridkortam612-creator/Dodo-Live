@@ -23,11 +23,26 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.16.5'
+          flutter-version: '3.19.x'
           cache: true
 
-      - name: Get Dependencies
-        run: flutter pub get
+      - name: Create Clean Flutter Project and Copy Files
+        run: |
+          # 1. إنشاء مشروع مؤقت بنفس اسم الحزمة
+          flutter create temp_app --org com.dody --project-name dudylive --platforms android
+          
+          # 2. نسخ مجلد lib وملف pubspec.yaml الخاص بك إلى المشروع الجديد
+          rm -rf temp_app/lib
+          cp -r lib temp_app/lib
+          cp pubspec.yaml temp_app/pubspec.yaml
+          
+          # 3. الانتقال للمشروع الجديد لبدء البناء
+          cd temp_app
+          flutter pub get
+          flutter build apk --release
 
-      - name: Build APK
-        run: flutter build apk --release
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          path: temp_app/build/app/outputs/flutter-apk/app-release.apk
