@@ -1,6 +1,0 @@
-mkdir -p /home/claude/dodo_live/frontend/lib/features/live_room/widgets \
-  /home/claude/dodo_live/frontend/lib/features/gifts/widgets \
-  /home/claude/dodo_live/frontend/lib/features/gifts/models \
-  /home/claude/dodo_live/frontend/lib/features/pk_battle/widgets \
-  /home/claude/dodo_live/frontend/lib/core/services
-echo done
