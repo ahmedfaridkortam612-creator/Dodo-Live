@@ -1,27 +1,37 @@
 import 'package:flutter/material.dart';
-import 'core/router/app_router.dart';
-import 'core/theme/app_colors.dart';
+import 'screens/splash_screen.dart';
+import 'screens/main_home_screen.dart';
+import 'screens/wallet_screen.dart';
+import 'screens/leaderboard_screen.dart';
+import 'screens/live_room_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const DodoLiveApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class DodoLiveApp extends StatelessWidget {
+  const DodoLiveApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Dody Live',
+    return MaterialApp(
+      title: 'Dodo Live',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: AppColors.surface,
-        appBarTheme: const AppBarTheme(
-          backgroundColor: AppColors.surface,
-          elevation: 0,
-        ),
+      theme: ThemeData(
+        useMaterial3: true,
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: const Color(0xFF120B22),
+        primarySwatch: Colors.purple,
       ),
-      routerConfig: appRouter,
+      // ابدأ بالشاشة الافتتاحية
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const SplashScreen(),
+        '/home': (context) => const MainHomeScreen(),
+        '/wallet': (context) => const WalletScreen(),
+        '/leaderboard': (context) => const LeaderboardScreen(),
+        '/live_room': (context) => const LiveRoomScreen(),
+      },
     );
   }
 }
