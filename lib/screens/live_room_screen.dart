@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 import '../widgets/gift_sheet.dart';
 import '../widgets/mini_games_sheet.dart';
@@ -11,10 +13,11 @@ class LiveRoomScreen extends StatefulWidget {
 }
 
 class _LiveRoomScreenState extends State<LiveRoomScreen> {
-  // قيم تعريفية لمحرك ZegoCloud للبث المباشر
-  static const int appID = 123456789; // استبدلها بالـ AppID الخاص بك من لوحة تحكم Zego
-  static const String appSign = "your_app_sign_here"; // استبدلها بالـ AppSign الخاص بك
+  static const int appID = 123456789;
+  static const String appSign = "your_app_sign_here";
   
+  final TextEditingController _messageController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   bool isConnected = false;
 
   @override
@@ -30,18 +33,38 @@ class _LiveRoomScreenState extends State<LiveRoomScreen> {
         ZegoScenario.LiveStreaming,
       );
       await ZegoExpressEngine.createEngineWithProfile(profile);
-      
-      setState(() {
-        isConnected = true;
+      setState(() => isConnected = true);
+    } catch (e) {
+      debugPrint("خطأ في تشغيل محرك البث: $e");
+    }
+  }
+
+  // إرسال رسالة حية إلى Firestore
+  void _sendMessage() async {
+    if (_messageController.text.trim().isEmpty) return;
+    
+    final user = FirebaseAuth.instance.currentUser;
+    final userName = user?.email ?? 'مستخدم دودو';
+    final messageText = _messageController.text.trim();
+
+    _messageController.clear();
+
+    try {
+      await FirebaseFirestore.instance.collection('live_chat_messages').add({
+        'sender': userName.split('@')[0],
+        'text': messageText,
+        'timestamp': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      debugPrint("خطأ في تهيئة سيرفر البث: $e");
+      debugPrint("خطأ في إرسال الرسالة: $e");
     }
   }
 
   @override
   void dispose() {
     ZegoExpressEngine.destroyEngine();
+    _messageController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -51,27 +74,17 @@ class _LiveRoomScreenState extends State<LiveRoomScreen> {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // خلفية البث المباشر (أو الكاميرا)
+          // خلفية البث
           Positioned.fill(
             child: Container(
               color: const Color(0xFF120B22),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(Icons.live_tv, color: Colors.pinkAccent, size: 70),
-                    SizedBox(height: 16),
-                    Text(
-                      'جاري الاتصال بغرفة البث الحي...',
-                      style: TextStyle(color: Colors.white70, fontSize: 14),
-                    ),
-                  ],
-                ),
+              child: const Center(
+                child: Icon(Icons.live_tv, color: Colors.white24, size: 80),
               ),
             ),
           ),
           
-          // واجهة الأزرار العلوية والسفلية (الهدايا، الألعاب، والشات)
+          // المحتوى والشات الحي من قاعدة البيانات
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -105,7 +118,47 @@ class _LiveRoomScreenState extends State<LiveRoomScreen> {
                     ],
                   ),
 
-                  // الأزرار السفلية
+                  // قائمة عرض الرسائل الحية من Firestore
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20.0),
+                      child: StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('live_chat_messages')
+                            .orderBy('timestamp', descending: true)
+                            .limit(50)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return const Center(child: CircularProgressIndicator(color: Colors.pink));
+                          }
+                          final docs = snapshot.data!.docs;
+                          return ListView.builder(
+                            reverse: true,
+                            controller: _scrollController,
+                            itemCount: docs.length,
+                            itemBuilder: (context, index) {
+                              final data = docs[index].data() as Map<String, dynamic>;
+                              return Container(
+                                margin: const EdgeInsets.only(bottom: 8),
+                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                decoration: BoxDecoration(
+                                  color: Colors.black45,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  '${data['sender'] ?? 'مستخدم'}: ${data['text'] ?? ''}',
+                                  style: const TextStyle(color: Colors.white, fontSize: 13),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+
+                  // الأزرار السفلية وحقل الكتابة
                   Row(
                     children: [
                       Expanded(
@@ -116,19 +169,26 @@ class _LiveRoomScreenState extends State<LiveRoomScreen> {
                             borderRadius: BorderRadius.circular(25),
                             border: Border.all(color: Colors.white24),
                           ),
-                          child: const TextField(
-                            style: TextStyle(color: Colors.white),
-                            decoration: InputDecoration(
+                          child: TextField(
+                            controller: _messageController,
+                            style: const TextStyle(color: Colors.white),
+                            decoration: const InputDecoration(
                               hintText: 'تحدث في الغرفة...',
                               hintStyle: TextStyle(color: Colors.white60),
                               border: InputBorder.none,
                             ),
+                            onSubmitted: (_) => _sendMessage(),
                           ),
                         ),
                       ),
-                      const SizedBox(width: 10),
-
-                      // زر الألعاب المصغرة
+                      const SizedBox(width: 8),
+                      IconButton(
+                        style: IconButton.styleFrom(backgroundColor: Colors.pink),
+                        icon: const Icon(Icons.send, color: Colors.white),
+                        onPressed: _sendMessage,
+                      ),
+                      const SizedBox(width: 8),
+                      // زر الألعاب
                       IconButton(
                         style: IconButton.styleFrom(backgroundColor: Colors.purple.withOpacity(0.8)),
                         icon: const Icon(Icons.games, color: Colors.white),
@@ -140,11 +200,10 @@ class _LiveRoomScreenState extends State<LiveRoomScreen> {
                           );
                         },
                       ),
-                      const SizedBox(width: 8),
-
-                      // زر الهدايا الفخمة
+                      const SizedBox(width: 6),
+                      // زر الهدايا
                       IconButton(
-                        style: IconButton.styleFrom(backgroundColor: Colors.pink),
+                        style: IconButton.styleFrom(backgroundColor: Colors.pinkAccent),
                         icon: const Icon(Icons.card_giftcard, color: Colors.white),
                         onPressed: () {
                           showModalBottomSheet(
