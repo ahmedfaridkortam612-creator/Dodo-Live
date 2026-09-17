@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'screens/splash_screen.dart';
 import 'screens/main_home_screen.dart';
 import 'screens/wallet_screen.dart';
 import 'screens/leaderboard_screen.dart';
 import 'screens/live_room_screen.dart';
+import 'screens/messages_screen.dart';
+import 'screens/edit_profile_screen.dart';
+import 'screens/friends_screen.dart';
+import 'screens/settings_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const DodoLiveApp());
 }
 
@@ -23,15 +32,105 @@ class DodoLiveApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color(0xFF120B22),
         primarySwatch: Colors.purple,
       ),
-      // ابدأ بالشاشة الافتتاحية
       initialRoute: '/',
       routes: {
         '/': (context) => const SplashScreen(),
+        '/login': (context) => const LoginScreen(),
         '/home': (context) => const MainHomeScreen(),
         '/wallet': (context) => const WalletScreen(),
         '/leaderboard': (context) => const LeaderboardScreen(),
         '/live_room': (context) => const LiveRoomScreen(),
+        '/messages': (context) => const MessagesScreen(),
+        '/edit_profile': (context) => const EditProfileScreen(),
+        '/friends': (context) => const FriendsScreen(),
+        '/settings': (context) => const SettingsScreen(),
       },
+    );
+  }
+}
+
+// شاشة تسجيل الدخول الحقيقية باستخدام Firebase Auth
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  bool _isLoading = false;
+
+  void _login() async {
+    setState(() => _isLoading = true);
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(context, '/home');
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('خطأ في تسجيل الدخول: $e')),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'تسجيل الدخول - دودو لايف',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+                const SizedBox(height: 30),
+                TextField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
+                    labelText: 'البريد الإلكتروني',
+                    filled: true,
+                    fillColor: Color(0xFF1A102F),
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    labelText: 'كلمة المرور',
+                    filled: true,
+                    fillColor: Color(0xFF1A102F),
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                _isLoading
+                    ? const CircularProgressIndicator(color: Colors.amber)
+                    : ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.pink,
+                          minimumSize: const Size(double.infinity, 50),
+                        ),
+                        onPressed: _login,
+                        child: const Text('دخول', style: TextStyle(color: Colors.white, fontSize: 16)),
+                      ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
