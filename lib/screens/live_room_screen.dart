@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:zego_express_engine/zego_express_engine.dart';
 import '../widgets/gift_sheet.dart';
 import '../widgets/mini_games_sheet.dart';
 
@@ -13,33 +12,9 @@ class LiveRoomScreen extends StatefulWidget {
 }
 
 class _LiveRoomScreenState extends State<LiveRoomScreen> {
-  static const int appID = 123456789;
-  static const String appSign = "your_app_sign_here";
-  
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  bool isConnected = false;
 
-  @override
-  void initState() {
-    super.initState();
-    initZegoCloud();
-  }
-
-  void initZegoCloud() async {
-    try {
-      ZegoEngineProfile profile = ZegoEngineProfile(
-        appID,
-        ZegoScenario.LiveStreaming,
-      );
-      await ZegoExpressEngine.createEngineWithProfile(profile);
-      setState(() => isConnected = true);
-    } catch (e) {
-      debugPrint("خطأ في تشغيل محرك البث: $e");
-    }
-  }
-
-  // إرسال رسالة حية إلى Firestore
   void _sendMessage() async {
     if (_messageController.text.trim().isEmpty) return;
     
@@ -62,7 +37,6 @@ class _LiveRoomScreenState extends State<LiveRoomScreen> {
 
   @override
   void dispose() {
-    ZegoExpressEngine.destroyEngine();
     _messageController.dispose();
     _scrollController.dispose();
     super.dispose();
@@ -74,7 +48,6 @@ class _LiveRoomScreenState extends State<LiveRoomScreen> {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // خلفية البث
           Positioned.fill(
             child: Container(
               color: const Color(0xFF120B22),
@@ -83,15 +56,12 @@ class _LiveRoomScreenState extends State<LiveRoomScreen> {
               ),
             ),
           ),
-          
-          // المحتوى والشات الحي من قاعدة البيانات
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // الهيدر العلوي
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -117,8 +87,6 @@ class _LiveRoomScreenState extends State<LiveRoomScreen> {
                       ),
                     ],
                   ),
-
-                  // قائمة عرض الرسائل الحية من Firestore
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 20.0),
@@ -157,8 +125,6 @@ class _LiveRoomScreenState extends State<LiveRoomScreen> {
                       ),
                     ),
                   ),
-
-                  // الأزرار السفلية وحقل الكتابة
                   Row(
                     children: [
                       Expanded(
@@ -188,7 +154,6 @@ class _LiveRoomScreenState extends State<LiveRoomScreen> {
                         onPressed: _sendMessage,
                       ),
                       const SizedBox(width: 8),
-                      // زر الألعاب
                       IconButton(
                         style: IconButton.styleFrom(backgroundColor: Colors.purple.withOpacity(0.8)),
                         icon: const Icon(Icons.games, color: Colors.white),
@@ -201,7 +166,6 @@ class _LiveRoomScreenState extends State<LiveRoomScreen> {
                         },
                       ),
                       const SizedBox(width: 6),
-                      // زر الهدايا
                       IconButton(
                         style: IconButton.styleFrom(backgroundColor: Colors.pinkAccent),
                         icon: const Icon(Icons.card_giftcard, color: Colors.white),
