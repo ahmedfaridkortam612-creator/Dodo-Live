@@ -112,6 +112,12 @@ class _DodiMainHomeScreenState extends State<DodiMainHomeScreen> {
     });
   }
 
+  void _addDiamonds(int amount) {
+    setState(() {
+      _userDiamonds += amount;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<Widget> screens = [
@@ -119,12 +125,13 @@ class _DodiMainHomeScreenState extends State<DodiMainHomeScreen> {
         userDiamonds: _userDiamonds,
         rooms: _rooms,
         onAddRoom: _addNewRoom,
+        onChargeRequested: () => setState(() => _currentIndex = 2),
       ),
       const LeaderboardTab(),
       ProfileWalletTab(
         diamonds: _userDiamonds,
         selectedFrame: _selectedFrame,
-        onCharge: () => setState(() => _userDiamonds += 2000),
+        onCharge: _addDiamonds,
         onFrameChanged: (newFrame) => setState(() => _selectedFrame = newFrame),
       ),
     ];
@@ -140,7 +147,7 @@ class _DodiMainHomeScreenState extends State<DodiMainHomeScreen> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.live_tv), label: 'الغرف الحية 🎥'),
           BottomNavigationBarItem(icon: Icon(Icons.leaderboard), label: 'المتصدرين 🏆'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'البروفايل والـ VIP 👑'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'البروفايل والمحفظة 👑'),
         ],
       ),
     );
@@ -218,12 +225,14 @@ class RoomsFeedTab extends StatelessWidget {
   final int userDiamonds;
   final List<Map<String, String>> rooms;
   final Function(String, String) onAddRoom;
+  final VoidCallback onChargeRequested;
 
   const RoomsFeedTab({
     super.key,
     required this.userDiamonds,
     required this.rooms,
     required this.onAddRoom,
+    required this.onChargeRequested,
   });
 
   void _showCreateRoomDialog(BuildContext context) {
@@ -313,15 +322,20 @@ class RoomsFeedTab extends StatelessWidget {
                       onPressed: () => _showCreateRoomDialog(context),
                     ),
                     const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                      decoration: BoxDecoration(color: Colors.purple.withOpacity(0.4), borderRadius: BorderRadius.circular(15)),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.diamond, color: Colors.amber, size: 14),
-                          const SizedBox(width: 4),
-                          Text('$userDiamonds', style: const TextStyle(color: Colors.amber, fontWeight: FontWeight.bold)),
-                        ],
+                    InkWell(
+                      onTap: onChargeRequested,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        decoration: BoxDecoration(color: Colors.purple.withOpacity(0.4), borderRadius: BorderRadius.circular(15)),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.diamond, color: Colors.amber, size: 14),
+                            const SizedBox(width: 4),
+                            Text('$userDiamonds', style: const TextStyle(color: Colors.amber, fontWeight: FontWeight.bold)),
+                            const SizedBox(width: 2),
+                            const Icon(Icons.add_circle, color: Colors.pinkAccent, size: 12),
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -409,7 +423,7 @@ class RoomsFeedTab extends StatelessWidget {
 class ProfileWalletTab extends StatelessWidget {
   final int diamonds;
   final String selectedFrame;
-  final VoidCallback onCharge;
+  final Function(int) onCharge;
   final Function(String) onFrameChanged;
 
   const ProfileWalletTab({
@@ -419,6 +433,156 @@ class ProfileWalletTab extends StatelessWidget {
     required this.onCharge,
     required this.onFrameChanged,
   });
+
+  void _showRechargeModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: const Color(0xFF1A0933),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            left: 20,
+            right: 20,
+            top: 20,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+          ),
+          height: 520,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('مركز شحن الألماس والكوينز الفاخر 💎', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                  IconButton(
+                    icon: const Icon(Icons.close, color: Colors.white54),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
+              const Text('اختر باقة الشحن المفضلة أو استخدم كوبون شحن فوري:', style: TextStyle(color: Colors.white54, fontSize: 12)),
+              const SizedBox(height: 16),
+              
+              // Voucher Input Section
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.black45,
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(color: Colors.pink.withOpacity(0.4)),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        style: const TextStyle(color: Colors.white, fontSize: 13),
+                        decoration: const InputDecoration(
+                          hintText: 'أدخل كود قسيمة الشحن (Voucher Code)',
+                          hintStyle: TextStyle(color: Colors.white38, fontSize: 12),
+                          border: InputBorder.none,
+                          isDense: true,
+                        ),
+                        onSubmitted: (code) {
+                          if (code.trim().toUpperCase() == 'DODI2026' || code.trim().isNotEmpty) {
+                            onCharge(15000); // 15,000 كوينز بـ 1 دولار كمكافأة أو شحن كود
+                            Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('🎉 تم شحن 15,000 ماسة بنجاح عبر الكود الإداري!')),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.pink,
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      ),
+                      onPressed: () {
+                        onCharge(15000);
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('🎉 تم إضافة 15,000 ماسة لحسابك بنجاح!')),
+                        );
+                      },
+                      child: const Text('تفعيل الكود', style: TextStyle(fontSize: 11, color: Colors.white)),
+                    ),
+                  ],
+                ),
+              ),
+              
+              const SizedBox(height: 16),
+              const Text('باقات الشحن السريع المعتمدة:', style: TextStyle(color: Colors.white70, fontSize: 13, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 10),
+
+              Expanded(
+                child: ListView(
+                  children: [
+                    _buildRechargePackageItem(context, 'باقة المبتدئين 🌟', '1,500 ماسة', '$0.10', 1500, Colors.purpleAccent),
+                    _buildRechargePackageItem(context, 'باقة النجوم المتألقة ✨', '15,000 ماسة (1 دولار)', '$1.00', 15000, Colors.blueAccent),
+                    _buildRechargePackageItem(context, 'باقة الملوك الفاخرة 👑', '75,000 ماسة', '$5.00', 75000, Colors.pink),
+                    _buildRechargePackageItem(context, 'باقة الأساطير الكبرى 💎⚡', '150,000 ماسة', '$10.00', 150000, Colors.amber),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildRechargePackageItem(BuildContext context, String title, String subtitle, String price, int addedDiamonds, Color color) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.purple.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: color.withOpacity(0.6)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.diamond, color: Colors.amber, size: 26),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
+                  const SizedBox(height: 2),
+                  Text(subtitle, style: const TextStyle(color: Colors.white60, fontSize: 11)),
+                ],
+              ),
+            ],
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: color,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+            onPressed: () {
+              onCharge(addedDiamonds);
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('✅ تمت عملية الشحن بنجاح وتمت إضافة ($addedDiamonds ماسة)!')),
+              );
+            },
+            child: Text(price, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+          ),
+        ],
+      ),
+    );
+  }
 
   void _showFramesDialog(BuildContext context) {
     final List<Map<String, dynamic>> frames = [
@@ -556,7 +720,7 @@ class ProfileWalletTab extends StatelessWidget {
                       foregroundColor: Colors.black,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                     ),
-                    onPressed: onCharge,
+                    onPressed: () => _showRechargeModal(context),
                     child: const Text('شحن ⚡', style: TextStyle(fontWeight: FontWeight.bold)),
                   ),
                 ],
