@@ -83,7 +83,7 @@ class DodiLoginScreen extends StatelessWidget {
   }
 }
 
-// الشاشة الرئيسية التي تضم قائمة الغرف والمحفظة والبروفايل
+// الشاشة الرئيسية التي تضم قائمة الغرف، زر بدء البث، والمحفظة
 class DodiMainHomeScreen extends StatefulWidget {
   const DodiMainHomeScreen({super.key});
 
@@ -94,13 +94,32 @@ class DodiMainHomeScreen extends StatefulWidget {
 class _DodiMainHomeScreenState extends State<DodiMainHomeScreen> {
   int _currentIndex = 0;
   int _userDiamonds = 5000;
+  final List<Map<String, String>> _rooms = [
+    {'title': 'غرفة الملوك والنجوم ✨', 'host': 'استريمر أحمد', 'viewers': '1.2K', 'category': 'ترفيه'},
+    {'title': 'جلسة طرب وأغاني طربية 🎤', 'host': 'سارة الملكية', 'viewers': '850', 'category': 'موسيقى'},
+    {'title': 'مسابقات وتحديات الماس 💎', 'host': 'الكابتن رامي', 'viewers': '3.4K', 'category': 'تحديات'},
+    {'title': 'دردشة حرة وسوالف ليلية 🌙', 'host': 'نوران السعيد', 'viewers': '540', 'category': 'دردشة'},
+  ];
+
+  void _addNewRoom(String title, String category) {
+    setState(() {
+      _rooms.insert(0, {
+        'title': title,
+        'host': 'مهندس أحمد (أنت)',
+        'viewers': '1',
+        'category': category,
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final List<Widget> screens = [
-      // تبويب الغرف المتاحة
-      RoomsFeedTab(userDiamonds: _userDiamonds),
-      // تبويب المحفظة والبروفايل
+      RoomsFeedTab(
+        userDiamonds: _userDiamonds,
+        rooms: _rooms,
+        onAddRoom: _addNewRoom,
+      ),
       ProfileWalletTab(
         diamonds: _userDiamonds,
         onCharge: () => setState(() => _userDiamonds += 1000),
@@ -124,20 +143,82 @@ class _DodiMainHomeScreenState extends State<DodiMainHomeScreen> {
   }
 }
 
-// تبويب قائمة الغرف الحية
+// تبويب قائمة الغرف الحية مع زر بدء بث جديد
 class RoomsFeedTab extends StatelessWidget {
   final int userDiamonds;
-  const RoomsFeedTab({super.key, required this.userDiamonds});
+  final List<Map<String, String>> rooms;
+  final Function(String, String) onAddRoom;
+
+  const RoomsFeedTab({
+    super.key,
+    required this.userDiamonds,
+    required this.rooms,
+    required this.onAddRoom,
+  });
+
+  void _showCreateRoomDialog(BuildContext context) {
+    final TextEditingController titleController = TextEditingController();
+    String selectedCategory = 'ترفيه';
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: const Color(0xFF1A0933),
+          title: const Text('إطلاق غرفة بث جديدة 🎥', style: TextStyle(color: Colors.white)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: titleController,
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
+                  hintText: 'عنوان الغرفة (مثلاً: سهرة ملكية)',
+                  hintStyle: TextStyle(color: Colors.white54),
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Text('اختر التصنيف:', style: TextStyle(color: Colors.white70, fontSize: 12)),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: ['ترفيه', 'موسيقى', 'تحديات'].map((cat) {
+                  return ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: selectedCategory == cat ? Colors.pink : Colors.black45,
+                    ),
+                    onPressed: () {
+                      selectedCategory = cat;
+                    },
+                    child: Text(cat, style: const TextStyle(color: Colors.white)),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('إلغاء', style: TextStyle(color: Colors.white54)),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.pink),
+              onPressed: () {
+                if (titleController.text.trim().isNotEmpty) {
+                  onAddRoom(titleController.text.trim(), selectedCategory);
+                  Navigator.pop(context);
+                }
+              },
+              child: const Text('بدء البث الآن 🚀', style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, String>> rooms = [
-      {'title': 'غرفة الملوك والنجوم ✨', 'host': 'استريمر أحمد', 'viewers': '1.2K', 'category': 'ترفيه'},
-      {'title': 'جلسة طرب وأغاني طربية 🎤', 'host': 'سارة الملكية', 'viewers': '850', 'category': 'موسيقى'},
-      {'title': 'مسابقات وتحديات الماس 💎', 'host': 'الكابتن رامي', 'viewers': '3.4K', 'category': 'تحديات'},
-      {'title': 'دردشة حرة وسوالف ليلية 🌙', 'host': 'نوران السعيد', 'viewers': '540', 'category': 'دردشة'},
-    ];
-
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -148,16 +229,32 @@ class RoomsFeedTab extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('غرف البث النشطة 🔴', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(color: Colors.purple.withOpacity(0.4), borderRadius: BorderRadius.circular(15)),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.diamond, color: Colors.amber, size: 14),
-                      const SizedBox(width: 4),
-                      Text('$userDiamonds', style: const TextStyle(color: Colors.amber, fontWeight: FontWeight.bold)),
-                    ],
-                  ),
+                Row(
+                  children: [
+                    ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.pink,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                      ),
+                      icon: const Icon(Icons.add, size: 16),
+                      label: const Text('ابدأ بثك', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                      onPressed: () => _showCreateRoomDialog(context),
+                    ),
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                      decoration: BoxDecoration(color: Colors.purple.withOpacity(0.4), borderRadius: BorderRadius.circular(15)),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.diamond, color: Colors.amber, size: 14),
+                          const SizedBox(width: 4),
+                          Text('$userDiamonds', style: const TextStyle(color: Colors.amber, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
