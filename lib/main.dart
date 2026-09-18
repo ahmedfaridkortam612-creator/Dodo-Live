@@ -83,7 +83,7 @@ class DodiLoginScreen extends StatelessWidget {
   }
 }
 
-// الشاشة الرئيسية التي تضم قائمة الغرف، زر بدء البث، والمحفظة
+// الشاشة الرئيسية التي تضم الغرف، قائمة المتصدرين، والمحفظة
 class DodiMainHomeScreen extends StatefulWidget {
   const DodiMainHomeScreen({super.key});
 
@@ -120,6 +120,7 @@ class _DodiMainHomeScreenState extends State<DodiMainHomeScreen> {
         rooms: _rooms,
         onAddRoom: _addNewRoom,
       ),
+      const LeaderboardTab(), // تبويب المتصدرين الجديد
       ProfileWalletTab(
         diamonds: _userDiamonds,
         onCharge: () => setState(() => _userDiamonds += 1000),
@@ -136,8 +137,77 @@ class _DodiMainHomeScreenState extends State<DodiMainHomeScreen> {
         onTap: (index) => setState(() => _currentIndex = index),
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.live_tv), label: 'الغرف الحية 🎥'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'البروفايل والمحفظة 👑'),
+          BottomNavigationBarItem(icon: Icon(Icons.leaderboard), label: 'المتصدرين 🏆'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'البروفايل 👑'),
         ],
+      ),
+    );
+  }
+}
+
+// تبويب قائمة المتصدرين الأسبوعية واليومية
+class LeaderboardTab extends StatelessWidget {
+  const LeaderboardTab({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final List<Map<String, dynamic>> topSupporters = [
+      {'rank': 1, 'name': 'الملك فهد 👑', 'diamonds': '125,400', 'color': Colors.amber},
+      {'rank': 2, 'name': 'الشيخ خالد ✨', 'diamonds': '98,200', 'color': Colors.grey.shade300},
+      {'rank': 3, 'name': 'عبدالرحمن الفخم 💎', 'diamonds': '75,100', 'color': Colors.brown.shade300},
+      {'rank': 4, 'name': 'سلطان الأسطورة', 'diamonds': '50,000', 'color': Colors.white70},
+      {'rank': 5, 'name': 'مهندس أحمد', 'diamonds': '42,300', 'color': Colors.white70},
+    ];
+
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('قائمة كبار الداعمين 🏆', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
+            const SizedBox(height: 6),
+            const Text('أكثر الداعمين عطاءً هذا الأسبوع في المنصة', style: TextStyle(color: Colors.white54, fontSize: 13)),
+            const SizedBox(height: 20),
+            Expanded(
+              child: ListView.builder(
+                itemCount: topSupporters.length,
+                itemBuilder: (context, index) {
+                  final item = topSupporters[index];
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.purple.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: (item['color'] as Color).withOpacity(0.5)),
+                    ),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 18,
+                          backgroundColor: item['color'],
+                          child: Text('${item['rank']}', style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Text(item['name'], style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                        ),
+                        Row(
+                          children: [
+                            const Icon(Icons.diamond, color: Colors.amber, size: 16),
+                            const SizedBox(width: 6),
+                            Text(item['diamonds'], style: const TextStyle(color: Colors.amber, fontWeight: FontWeight.bold, fontSize: 14)),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -663,7 +733,7 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
                         ),
                         const SizedBox(width: 6),
                         CircleAvatar(
-                          backgroundColor: Colors.amber,
+                          backgroundColor:Colors.amber,
                           child: IconButton(
                             icon: const Icon(Icons.card_giftcard, color: Colors.black, size: 18),
                             onPressed: _showGiftsDialog,
