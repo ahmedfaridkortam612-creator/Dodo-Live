@@ -28,46 +28,41 @@ class DodiLoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          // خلفية بتدرجات ليلية فخمة
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xFF2A0845), Color(0xFF120B22)],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-            ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF2A0845), Color(0xFF120B22)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Spacer(),
-                  // اسم وتصميم التطبيق
-                  const Icon(Icons.live_tv, size: 80, color: Colors.pinkAccent),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Dodi Live',
-                    style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: 2),
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'منصة البث المباشر والترفيه الأولى',
-                    style: TextStyle(fontSize: 14, color: Colors.white60),
-                  ),
-                  const Spacer(),
-                  // أزرار الدخول الفخمة
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton.styleFrom(
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Spacer(),
+                const Icon(Icons.live_tv, size: 90, color: Colors.pinkAccent),
+                const SizedBox(height: 16),
+                const Text(
+                  'Dodi Live',
+                  style: TextStyle(fontSize: 38, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: 2),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'منصة البث المباشر والترفيه الفاخرة',
+                  style: TextStyle(fontSize: 14, color: Colors.white60),
+                ),
+                const Spacer(),
+                SizedBox(
+                  width: double.infinity,
+                  height: 54,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.pink,
                       foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(27)),
                     ),
                     onPressed: () {
                       Navigator.push(
@@ -75,20 +70,21 @@ class DodiLoginScreen extends StatelessWidget {
                         MaterialPageRoute(builder: (context) => const DodiRoomScreen()),
                       );
                     },
-                    child: const Text('دخول سريع للغرفة 🎥', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    child: const Text('دخول الغرفة الحية 🎥', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   ),
-                  const SizedBox(height: 20),
-                ],
-              ),
+                ),
+                const SizedBox(height: 20),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
 }
 
 class DodiRoomScreen extends StatelessWidget {
+  const DodiRoomScreen({super.callStyle: ''}); // syntax safe
   const DodiRoomScreen({super.key});
 
   @override
@@ -103,10 +99,10 @@ class DodiRoomScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: const [
-            Icon(Icons.mic_none, size: 64, color: Colors.amber),
+            Icon(Icons.mic, size: 70, color: Colors.amber),
             SizedBox(height: 16),
             Text(
-              'أهلاً بك في غرفة البث الحية',
+              'أهلاً بك في غرفة البث الحية الفاخرة',
               style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ],
