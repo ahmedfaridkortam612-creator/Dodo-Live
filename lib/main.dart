@@ -51,7 +51,7 @@ class DodiLoginScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 const Text(
-                  'منصة البث المباشر والترفيه الفاخرة',
+                  'منصة البث المباشر والمجتمع التفاعلي الفاخر',
                   style: TextStyle(fontSize: 14, color: Colors.white60),
                 ),
                 const Spacer(),
@@ -70,7 +70,7 @@ class DodiLoginScreen extends StatelessWidget {
                         MaterialPageRoute(builder: (context) => const DodiMainHomeScreen()),
                       );
                     },
-                    child: const Text('دخول التطبيق والمنصة 🚀', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    child: const Text('دخول المنصة والمجتمع 🚀', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -83,7 +83,6 @@ class DodiLoginScreen extends StatelessWidget {
   }
 }
 
-// الشاشة الرئيسية التي تضم الغرف، قائمة المتصدرين، والمحفظة
 class DodiMainHomeScreen extends StatefulWidget {
   const DodiMainHomeScreen({super.key});
 
@@ -93,19 +92,19 @@ class DodiMainHomeScreen extends StatefulWidget {
 
 class _DodiMainHomeScreenState extends State<DodiMainHomeScreen> {
   int _currentIndex = 0;
-  int _userDiamonds = 5000;
+  int _userDiamonds = 6500;
   final List<Map<String, String>> _rooms = [
-    {'title': 'غرفة الملوك والنجوم ✨', 'host': 'استريمر أحمد', 'viewers': '1.2K', 'category': 'ترفيه'},
-    {'title': 'جلسة طرب وأغاني طربية 🎤', 'host': 'سارة الملكية', 'viewers': '850', 'category': 'موسيقى'},
-    {'title': 'مسابقات وتحديات الماس 💎', 'host': 'الكابتن رامي', 'viewers': '3.4K', 'category': 'تحديات'},
-    {'title': 'دردشة حرة وسوالف ليلية 🌙', 'host': 'نوران السعيد', 'viewers': '540', 'category': 'دردشة'},
+    {'title': 'غرفة الملوك والنجوم والتحديات ✨', 'host': 'استريمر أحمد', 'viewers': '1.5K', 'category': 'تحديات'},
+    {'title': 'جلسة طرب وأغاني طربية 🎤', 'host': 'سارة الملكية', 'viewers': '890', 'category': 'موسيقى'},
+    {'title': 'سحب الماس الكبرى (Gates) 💎', 'host': 'الكابتن رامي', 'viewers': '4.1K', 'category': 'ألعاب'},
+    {'title': 'دردشة حرة وسوالف ليلية 🌙', 'host': 'نوران السعيد', 'viewers': '620', 'category': 'دردشة'},
   ];
 
   void _addNewRoom(String title, String category) {
     setState(() {
       _rooms.insert(0, {
         'title': title,
-        'host': 'مهندس أحمد (أنت)',
+        'host': 'مهندس أحمد الملك (أنت)',
         'viewers': '1',
         'category': category,
       });
@@ -120,10 +119,10 @@ class _DodiMainHomeScreenState extends State<DodiMainHomeScreen> {
         rooms: _rooms,
         onAddRoom: _addNewRoom,
       ),
-      const LeaderboardTab(), // تبويب المتصدرين الجديد
+      const LeaderboardTab(),
       ProfileWalletTab(
         diamonds: _userDiamonds,
-        onCharge: () => setState(() => _userDiamonds += 1000),
+        onCharge: () => setState(() => _userDiamonds += 2000),
       ),
     ];
 
@@ -138,25 +137,24 @@ class _DodiMainHomeScreenState extends State<DodiMainHomeScreen> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.live_tv), label: 'الغرف الحية 🎥'),
           BottomNavigationBarItem(icon: Icon(Icons.leaderboard), label: 'المتصدرين 🏆'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'البروفايل 👑'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'البروفايل والـ VIP 👑'),
         ],
       ),
     );
   }
 }
 
-// تبويب قائمة المتصدرين الأسبوعية واليومية
 class LeaderboardTab extends StatelessWidget {
   const LeaderboardTab({super.key});
 
   @override
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> topSupporters = [
-      {'rank': 1, 'name': 'الملك فهد 👑', 'diamonds': '125,400', 'color': Colors.amber},
-      {'rank': 2, 'name': 'الشيخ خالد ✨', 'diamonds': '98,200', 'color': Colors.grey.shade300},
-      {'rank': 3, 'name': 'عبدالرحمن الفخم 💎', 'diamonds': '75,100', 'color': Colors.brown.shade300},
-      {'rank': 4, 'name': 'سلطان الأسطورة', 'diamonds': '50,000', 'color': Colors.white70},
-      {'rank': 5, 'name': 'مهندس أحمد', 'diamonds': '42,300', 'color': Colors.white70},
+      {'rank': 1, 'name': 'الملك فهد (SVIP) 👑', 'diamonds': '155,400', 'color': Colors.amber},
+      {'rank': 2, 'name': 'الشيخ خالد ✨', 'diamonds': '112,200', 'color': Colors.grey.shade300},
+      {'rank': 3, 'name': 'عبدالرحمن الفخم 💎', 'diamonds': '85,100', 'color': Colors.brown.shade300},
+      {'rank': 4, 'name': 'سلطان الأسطورة', 'diamonds': '60,000', 'color': Colors.white70},
+      {'rank': 5, 'name': 'مهندس أحمد الملك', 'diamonds': '52,300', 'color': Colors.white70},
     ];
 
     return SafeArea(
@@ -165,9 +163,9 @@ class LeaderboardTab extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('قائمة كبار الداعمين 🏆', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
+            const Text('قائمة كبار الداعمين (Leaderboard) 🏆', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
             const SizedBox(height: 6),
-            const Text('أكثر الداعمين عطاءً هذا الأسبوع في المنصة', style: TextStyle(color: Colors.white54, fontSize: 13)),
+            const Text('المنافسة المشتعلة بين أساطير المجتمع هذا الأسبوع', style: TextStyle(color: Colors.white54, fontSize: 13)),
             const SizedBox(height: 20),
             Expanded(
               child: ListView.builder(
@@ -213,7 +211,6 @@ class LeaderboardTab extends StatelessWidget {
   }
 }
 
-// تبويب قائمة الغرف الحية مع زر بدء بث جديد
 class RoomsFeedTab extends StatelessWidget {
   final int userDiamonds;
   final List<Map<String, String>> rooms;
@@ -228,14 +225,14 @@ class RoomsFeedTab extends StatelessWidget {
 
   void _showCreateRoomDialog(BuildContext context) {
     final TextEditingController titleController = TextEditingController();
-    String selectedCategory = 'ترفيه';
+    String selectedCategory = 'تحديات';
 
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           backgroundColor: const Color(0xFF1A0933),
-          title: const Text('إطلاق غرفة بث جديدة 🎥', style: TextStyle(color: Colors.white)),
+          title: const Text('إطلاق غرفة بث تفاعلية 🎥', style: TextStyle(color: Colors.white)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -243,7 +240,7 @@ class RoomsFeedTab extends StatelessWidget {
                 controller: titleController,
                 style: const TextStyle(color: Colors.white),
                 decoration: const InputDecoration(
-                  hintText: 'عنوان الغرفة (مثلاً: سهرة ملكية)',
+                  hintText: 'عنوان الغرفة (مثلاً: سهرة تحديات الماس)',
                   hintStyle: TextStyle(color: Colors.white54),
                 ),
               ),
@@ -252,7 +249,7 @@ class RoomsFeedTab extends StatelessWidget {
               const SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: ['ترفيه', 'موسيقى', 'تحديات'].map((cat) {
+                children: ['تحديات', 'ألعاب', 'موسيقى', 'دردشة'].map((cat) {
                   return ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: selectedCategory == cat ? Colors.pink : Colors.black45,
@@ -260,7 +257,7 @@ class RoomsFeedTab extends StatelessWidget {
                     onPressed: () {
                       selectedCategory = cat;
                     },
-                    child: Text(cat, style: const TextStyle(color: Colors.white)),
+                    child: Text(cat, style: const TextStyle(color: Colors.white, fontSize: 11)),
                   );
                 }).toList(),
               ),
@@ -279,7 +276,7 @@ class RoomsFeedTab extends StatelessWidget {
                   Navigator.pop(context);
                 }
               },
-              child: const Text('بدء البث الآن 🚀', style: TextStyle(color: Colors.white)),
+              child: const Text('ابدأ البث الآن 🚀', style: TextStyle(color: Colors.white)),
             ),
           ],
         );
@@ -298,7 +295,7 @@ class RoomsFeedTab extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('غرف البث النشطة 🔴', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
+                const Text('المجتمع والغرف النشطة 🔴', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
                 Row(
                   children: [
                     ElevatedButton.icon(
@@ -309,7 +306,7 @@ class RoomsFeedTab extends StatelessWidget {
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                       ),
                       icon: const Icon(Icons.add, size: 16),
-                      label: const Text('ابدأ بثك', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                      label: const Text('افتح غرفتك', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
                       onPressed: () => _showCreateRoomDialog(context),
                     ),
                     const SizedBox(width: 8),
@@ -382,7 +379,7 @@ class RoomsFeedTab extends StatelessWidget {
                             ],
                           ),
                           const Center(
-                            child: Icon(Icons.mic, size: 40, color: Colors.amber),
+                            child: Icon(Icons.mic_external_on, size: 40, color: Colors.amber),
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -406,7 +403,6 @@ class RoomsFeedTab extends StatelessWidget {
   }
 }
 
-// تبويب المحفظة والبروفايل
 class ProfileWalletTab extends StatelessWidget {
   final int diamonds;
   final VoidCallback onCharge;
@@ -426,9 +422,13 @@ class ProfileWalletTab extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             const Text('مهندس أحمد الملك 👑', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
-            const SizedBox(height: 6),
-            const Text('ID: 88992211', style: TextStyle(color: Colors.white54, fontSize: 13)),
-            const SizedBox(height: 30),
+            const SizedBox(height: 4),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(color: Colors.amber.withOpacity(0.2), borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.amber)),
+              child: const Text('وسام SVIP أسطوري ✨', style: TextStyle(color: Colors.amber, fontSize: 11, fontWeight: FontWeight.bold)),
+            ),
+            const SizedBox(height: 20),
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -471,7 +471,7 @@ class ProfileWalletTab extends StatelessWidget {
   }
 }
 
-// غرفة البث الحي المتكاملة مع المايكات والشات والهدايا
+// غرفة البث التفاعلية مع ألعاب المصادفة والهدايا الملكية العائمة
 class DodiRoomScreen extends StatefulWidget {
   final String roomTitle;
   final int diamonds;
@@ -484,11 +484,11 @@ class DodiRoomScreen extends StatefulWidget {
 class _DodiRoomScreenState extends State<DodiRoomScreen> {
   final TextEditingController _msgController = TextEditingController();
   final List<String> _messages = [
-    'أهلاً بالجميع في الغرفة الملكية 👑',
-    'منور البث يا فنان ✨',
+    'أهلاً بالجميع في الغرفة التفاعلية الأسطورية 👑',
+    'استعدوا لمسابقات وألعاب الحظ الآن! 🎲',
   ];
   late int _userDiamonds;
-  String? _activeGiftAnimation;
+  String? _activeGlobalAlert;
 
   @override
   void initState() {
@@ -502,6 +502,81 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
       _messages.add('أنت: ${_msgController.text.trim()}');
       _msgController.clear();
     });
+  }
+
+  // نافذة ألعاب الحظ التفاعلية داخل الغرفة (مثل الألعاب الترفيهية المشتركة)
+  void _showMiniGamesDialog() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: const Color(0xFF1A0933),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(20),
+          height: 260,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('ألعاب الغرفة التفاعلية ومسابقات الحظ 🎲', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+              const SizedBox(height: 6),
+              const Text('اختر اللعبة وشارك المايكات حماسة التحدي:', style: TextStyle(color: Colors.white54, fontSize: 12)),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildGameCard('تحدي الأسد 🦁', 200, Colors.amber),
+                  _buildGameCard('سحب الأوليمبس ⚡', 500, Colors.blueAccent),
+                  _buildGameCard('عجلة الحظ 🎡', 100, Colors.pinkAccent),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildGameCard(String gameName, int cost, Color color) {
+    return InkWell(
+      onTap: () {
+        Navigator.pop(context);
+        if (_userDiamonds >= cost) {
+          setState(() {
+            _userDiamonds -= cost;
+            _activeGlobalAlert = '🎉 مهندس أحمد شارك في ($gameName) وربح مضاعفة الماسات!';
+            _messages.add('🎲 شاركت في لعبة ($gameName) وتكلفت (-$cost ماسة)');
+          });
+          Future.delayed(const Duration(seconds: 4), () {
+            if (mounted) setState(() => _activeGlobalAlert = null);
+          });
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('رصيد الماسات غير كافٍ للمشاركة في اللعبة!')),
+          );
+        }
+      },
+      child: Container(
+        width: 100,
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.black45,
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(color: color, width: 1.5),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.gamepad, color: color, size: 28),
+            const SizedBox(height: 8),
+            Text(gameName, style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+            const SizedBox(height: 4),
+            Text('$cost 💎', style: const TextStyle(color: Colors.amber, fontSize: 10)),
+          ],
+        ),
+      ),
+    );
   }
 
   void _showGiftsDialog() {
@@ -521,7 +596,7 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('اختر هدية فاخرة 🎁', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                  const Text('اختر هدية ملكية عائمة 🎁', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
                   Row(
                     children: [
                       const Icon(Icons.diamond, color: Colors.amber, size: 18),
@@ -558,11 +633,11 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
         if (_userDiamonds >= cost) {
           setState(() {
             _userDiamonds -= cost;
-            _activeGiftAnimation = giftName;
+            _activeGlobalAlert = '👑 إشعار ملكي: مهندس أحمد أرسل هدية ($giftName) للغرفة!';
             _messages.add('🎁 أرسلت هدية فخمة: $giftName (-$cost ماسة)');
           });
-          Future.delayed(const Duration(seconds: 3), () {
-            if (mounted) setState(() => _activeGiftAnimation = null);
+          Future.delayed(const Duration(seconds: 4), () {
+            if (mounted) setState(() => _activeGlobalAlert = null);
           });
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -605,7 +680,7 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
             children: [
               Column(
                 children: [
-                  // الشريط العلوي للغرفة
+                  // الشريط العلوي
                   Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Row(
@@ -650,7 +725,7 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
                     ),
                   ),
 
-                  // شبكة المايكات (Seats)
+                  // شبكة المايكات (Seats) مع إظهار ألقاب الـ VIP
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
                     child: Row(
@@ -661,16 +736,16 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
                             padding: const EdgeInsets.all(2),
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              border: Border.all(color: Colors.amber, width: 2),
+                              border: Border.all(color: index == 0 ? Colors.amber : Colors.purpleAccent, width: 2),
                             ),
-                            child: const CircleAvatar(
+                            child: CircleAvatar(
                               radius: 28,
                               backgroundColor: Colors.black54,
-                              child: Icon(Icons.mic, color: Colors.amber, size: 22),
+                              child: Icon(index == 0 ? Icons.mic : Icons.mic_none, color: index == 0 ? Colors.amber : Colors.white70, size: 22),
                             ),
                           ),
                           const SizedBox(height: 6),
-                          Text('مايك ${index + 1}', style: const TextStyle(color: Colors.white70, fontSize: 11)),
+                          Text(index == 0 ? 'مضيف SVIP' : 'مايك ${index + 1}', style: TextStyle(color: index == 0 ? Colors.amber : Colors.white70, fontSize: 10, fontWeight: FontWeight.bold)),
                         ],
                       )),
                     ),
@@ -700,7 +775,7 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
                     ),
                   ),
 
-                  // شريط المحادثة والهدايا السفلي
+                  // شريط المحادثة وأزرار التفاعل والألعاب والسفلي
                   Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Row(
@@ -710,7 +785,7 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
                             controller: _msgController,
                             style: const TextStyle(color: Colors.white),
                             decoration: InputDecoration(
-                              hintText: 'تحدث في الغرفة...',
+                              hintText: 'تحدث وتفاعل مع المجتمع...',
                               hintStyle: const TextStyle(color: Colors.white54),
                               filled: true,
                               fillColor: Colors.black54,
@@ -725,18 +800,20 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
                         ),
                         const SizedBox(width: 8),
                         CircleAvatar(
-                          backgroundColor: Colors.pink,
+                          backgroundColor: Colors.purple,
                           child: IconButton(
-                            icon: const Icon(Icons.send, color: Colors.white, size: 18),
-                            onPressed: _send,
+                            icon: const Icon(Icons.gamepad, color: Colors.amber, size: 18),
+                            onPressed: _showMiniGamesDialog,
+                            tooltip: 'ألعاب الغرفة',
                           ),
                         ),
                         const SizedBox(width: 6),
                         CircleAvatar(
-                          backgroundColor:Colors.amber,
+                          backgroundColor: Colors.amber,
                           child: IconButton(
                             icon: const Icon(Icons.card_giftcard, color: Colors.black, size: 18),
                             onPressed: _showGiftsDialog,
+                            tooltip: 'الهدايا الفاخرة',
                           ),
                         ),
                       ],
@@ -745,26 +822,26 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
                 ],
               ),
 
-              // تأثير الهدية الأسطورية المتحركة في منتصف الشاشة
-              if (_activeGiftAnimation != null)
-                Center(
+              // تنبيه الهدية أو اللعبة العائم الأسطوري في أعلى/منتصف الشاشة لكل الحضور
+              if (_activeGlobalAlert != null)
+                Positioned(
+                  top: 70,
+                  left: 20,
+                  right: 20,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     decoration: BoxDecoration(
-                      color: Colors.purple.shade900.withOpacity(0.9),
-                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.purple.shade900.withOpacity(0.95),
+                      borderRadius: BorderRadius.circular(16),
                       border: Border.all(color: Colors.amber, width: 2),
                       boxShadow: [
-                        BoxShadow(color: Colors.amber.withOpacity(0.5), blurRadius: 20, spreadRadius: 5),
+                        BoxShadow(color: Colors.amber.withOpacity(0.4), blurRadius: 15, spreadRadius: 3),
                       ],
                     ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Text('🎁 هدية أسطورية أُرسلت الآن!', style: TextStyle(color: Colors.amber, fontSize: 14, fontWeight: FontWeight.bold)),
-                        const SizedBox(height: 8),
-                        Text(_activeGiftAnimation!, style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
-                      ],
+                    child: Text(
+                      _activeGlobalAlert!,
+                      style: const TextStyle(color: Colors.amber, fontSize: 13, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ),
