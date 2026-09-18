@@ -67,10 +67,10 @@ class DodiLoginScreen extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const DodiRoomScreen()),
+                        MaterialPageRoute(builder: (context) => const DodiProfileScreen()),
                       );
                     },
-                    child: const Text('دخول الغرفة الحية 🎥', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    child: const Text('دخول البروفايل والغرف 🚀', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -83,8 +83,126 @@ class DodiLoginScreen extends StatelessWidget {
   }
 }
 
+// شاشة الملف الشخصي والمحفظة الفخمة
+class DodiProfileScreen extends StatefulWidget {
+  const DodiProfileScreen({super.key});
+
+  @override
+  State<DodiProfileScreen> createState() => _DodiProfileScreenState();
+}
+
+class _DodiProfileScreenState extends State<DodiProfileScreen> {
+  int _diamonds = 5000;
+
+  void _chargeDiamonds() {
+    setState(() {
+      _diamonds += 1000;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('تم شحن 1000 ماسة بنجاح 💎⚡')),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('الملف الشخصي والمحفظة 👑'),
+        backgroundColor: Colors.transparent,
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF1A0933), Color(0xFF0F071D)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              const CircleAvatar(
+                radius: 50,
+                backgroundColor: Colors.pinkAccent,
+                child: Icon(Icons.person, size: 60, color: Colors.white),
+              ),
+              const SizedBox(height: 16),
+              const Text('مهندس أحمد الملك 👑', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
+              const SizedBox(height: 6),
+              const Text('ID: 88992211', style: TextStyle(color: Colors.white54, fontSize: 13)),
+              const SizedBox(height: 30),
+              
+              // صندوق المحفظة والماسات
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.purple.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: Colors.amber.withOpacity(0.6), width: 1.5),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(Icons.diamond, color: Colors.amber, size: 36),
+                        const SizedBox(width: 14),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('رصيد الماسات 💎', style: TextStyle(color: Colors.white60, fontSize: 12)),
+                            Text('$_diamonds ماسة', style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      ],
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.amber,
+                        foregroundColor: Colors.black,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                      ),
+                      onPressed: _chargeDiamonds,
+                      child: const Text('شحن ⚡', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                  ],
+                ),
+              ),
+              const Spacer(),
+              
+              // زر الانتقال المباشر لغرفة البث
+              SizedBox(
+                width: double.infinity,
+                height: 54,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.pink,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(27)),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const DodiRoomScreen(diamonds: 5000)),
+                    );
+                  },
+                  child: const Text('الانتقال لغرفة البث المباشر 🎥', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                ),
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// غرفة البث الحي المتكاملة
 class DodiRoomScreen extends StatefulWidget {
-  const DodiRoomScreen({super.key});
+  final int diamonds;
+  const DodiRoomScreen({super.key, required this.diamonds});
 
   @override
   State<DodiRoomScreen> createState() => _DodiRoomScreenState();
@@ -96,8 +214,14 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
     'أهلاً بالجميع في غرفة البث الملكية 👑',
     'منور يا ملك الميكات ✨',
   ];
-  int _userDiamonds = 5000; // محفظة الماسات الافتراضية للمستخدم
-  String? _activeGiftAnimation; // لتفعيل تأثير الهدية على الشاشة
+  late int _userDiamonds;
+  String? _activeGiftAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _userDiamonds = widget.diamonds;
+  }
 
   void _send() {
     if (_msgController.text.trim().isEmpty) return;
@@ -107,7 +231,6 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
     });
   }
 
-  // نافذة الهدايا الماسية الفاخرة
   void _showGiftsDialog() {
     showModalBottomSheet(
       context: context,
@@ -165,13 +288,12 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
             _activeGiftAnimation = giftName;
             _messages.add('🎁 أرسلت هدية فخمة: $giftName (-$cost ماسة)');
           });
-          // إخفاء تأثير الهدية بعد 3 ثواني
           Future.delayed(const Duration(seconds: 3), () {
             if (mounted) setState(() => _activeGiftAnimation = null);
           });
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('رصيد الماسات غير كافٍ، قم بالشحن!')),
+            const SnackBar(content: Text('رصيد الماسات غير كافٍ، قم بالشحن من المحفظة!')),
           );
         }
       },
