@@ -95,8 +95,9 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
   final List<String> _messages = [
     'أهلاً بالجميع في غرفة البث الملكية 👑',
     'منور يا ملك الميكات ✨',
-    'أرسل هدية ماسية سريعة 💎'
   ];
+  int _userDiamonds = 5000; // محفظة الماسات الافتراضية للمستخدم
+  String? _activeGiftAnimation; // لتفعيل تأثير الهدية على الشاشة
 
   void _send() {
     if (_msgController.text.trim().isEmpty) return;
@@ -104,6 +105,93 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
       _messages.add('أنت: ${_msgController.text.trim()}');
       _msgController.clear();
     });
+  }
+
+  // نافذة الهدايا الماسية الفاخرة
+  void _showGiftsDialog() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: const Color(0xFF1A0933),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(20),
+          height: 280,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('اختر هدية فاخرة 🎁', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                  Row(
+                    children: [
+                      const Icon(Icons.diamond, color: Colors.amber, size: 18),
+                      const SizedBox(width: 4),
+                      Text('$_userDiamonds ماسة', style: const TextStyle(color: Colors.amber, fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Expanded(
+                child: GridView.count(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                  children: [
+                    _buildGiftItem('🌹 وردة ملكية', 100, Colors.pink),
+                    _buildGiftItem('🏎️ سيارة رياضية', 500, Colors.blue),
+                    _buildGiftItem('🏰 قصر أسطوري', 2000, Colors.amber),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildGiftItem(String giftName, int cost, Color color) {
+    return InkWell(
+      onTap: () {
+        Navigator.pop(context);
+        if (_userDiamonds >= cost) {
+          setState(() {
+            _userDiamonds -= cost;
+            _activeGiftAnimation = giftName;
+            _messages.add('🎁 أرسلت هدية فخمة: $giftName (-$cost ماسة)');
+          });
+          // إخفاء تأثير الهدية بعد 3 ثواني
+          Future.delayed(const Duration(seconds: 3), () {
+            if (mounted) setState(() => _activeGiftAnimation = null);
+          });
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('رصيد الماسات غير كافٍ، قم بالشحن!')),
+          );
+        }
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.black45,
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(color: color.withOpacity(0.6), width: 1.5),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(giftName.split(' ')[0], style: const TextStyle(fontSize: 28)),
+            const SizedBox(height: 6),
+            Text(giftName.split(' ').sublist(1).join(' '), style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold)),
+            Text('$cost 💎', style: const TextStyle(color: Colors.amber, fontSize: 10)),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -118,133 +206,173 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
           ),
         ),
         child: SafeArea(
-          child: Column(
+          child: Stack(
             children: [
-              // الشريط العلوي للغرفة
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: Colors.black54,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.pink.withOpacity(0.5)),
-                      ),
-                      child: Row(
-                        children: const [
-                          CircleAvatar(radius: 12, backgroundColor: Colors.pink, child: Icon(Icons.star, size: 14, color: Colors.white)),
-                          SizedBox(width: 8),
-                          Text('غرفة Dodi المميزة 👑', style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.close, color: Colors.white),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ],
-                ),
-              ),
-
-              // شبكة المايكات (Seats)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: List.generate(4, (index) => Column(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.amber, width: 2),
-                        ),
-                        child: const CircleAvatar(
-                          radius: 28,
-                          backgroundColor: Colors.black54,
-                          child: Icon(Icons.mic, color: Colors.amber, size: 22),
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text('مايك ${index + 1}', style: const TextStyle(color: Colors.white70, fontSize: 11)),
-                    ],
-                  )),
-                ),
-              ),
-
-              // شات الغرفة الحي
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: ListView.builder(
-                    itemCount: _messages.length,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 8),
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.4),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          _messages[index],
-                          style: const TextStyle(color: Colors.white, fontSize: 13),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-
-              // شريط المحادثة والهدايا السفلي
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _msgController,
-                        style: const TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
-                          hintText: 'تحدث في الغرفة...',
-                          hintStyle: const TextStyle(color: Colors.white54),
-                          filled: true,
-                          fillColor: Colors.black54,
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25),
-                            borderSide: BorderSide.none,
+              Column(
+                children: [
+                  // الشريط العلوي للغرفة
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: Colors.black54,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: Colors.pink.withOpacity(0.5)),
+                          ),
+                          child: Row(
+                            children: const [
+                              CircleAvatar(radius: 12, backgroundColor: Colors.pink, child: Icon(Icons.star, size: 14, color: Colors.white)),
+                              SizedBox(width: 8),
+                              Text('غرفة Dodi المميزة 👑', style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold)),
+                            ],
                           ),
                         ),
-                        onSubmitted: (_) => _send(),
-                      ),
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                              decoration: BoxDecoration(color: Colors.black45, borderRadius: BorderRadius.circular(15)),
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.diamond, color: Colors.amber, size: 14),
+                                  const SizedBox(width: 4),
+                                  Text('$_userDiamonds', style: const TextStyle(color: Colors.amber, fontSize: 12, fontWeight: FontWeight.bold)),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            IconButton(
+                              icon: const Icon(Icons.close, color: Colors.white),
+                              onPressed: () => Navigator.pop(context),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 8),
-                    CircleAvatar(
-                      backgroundColor: Colors.pink,
-                      child: IconButton(
-                        icon: const Icon(Icons.send, color: Colors.white, size: 18),
-                        onPressed: _send,
-                      ),
+                  ),
+
+                  // شبكة المايكات (Seats)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: List.generate(4, (index) => Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.amber, width: 2),
+                            ),
+                            child: const CircleAvatar(
+                              radius: 28,
+                              backgroundColor: Colors.black54,
+                              child: Icon(Icons.mic, color: Colors.amber, size: 22),
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text('مايك ${index + 1}', style: const TextStyle(color: Colors.white70, fontSize: 11)),
+                        ],
+                      )),
                     ),
-                    const SizedBox(width: 6),
-                    CircleAvatar(
-                      backgroundColor: Colors.amber,
-                      child: IconButton(
-                        icon: const Icon(Icons.card_giftcard, color: Colors.black, size: 18),
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('تم إرسال هدية ماسية في الغرفة 💎🎁')),
+                  ),
+
+                  // شات الغرفة الحي
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: ListView.builder(
+                        itemCount: _messages.length,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            margin: const EdgeInsets.only(bottom: 8),
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.4),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              _messages[index],
+                              style: const TextStyle(color: Colors.white, fontSize: 13),
+                            ),
                           );
                         },
                       ),
                     ),
-                  ],
-                ),
+                  ),
+
+                  // شريط المحادثة والهدايا السفلي
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _msgController,
+                            style: const TextStyle(color: Colors.white),
+                            decoration: InputDecoration(
+                              hintText: 'تحدث في الغرفة...',
+                              hintStyle: const TextStyle(color: Colors.white54),
+                              filled: true,
+                              fillColor: Colors.black54,
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(25),
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
+                            onSubmitted: (_) => _send(),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        CircleAvatar(
+                          backgroundColor: Colors.pink,
+                          child: IconButton(
+                            icon: const Icon(Icons.send, color: Colors.white, size: 18),
+                            onPressed: _send,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        CircleAvatar(
+                          backgroundColor: Colors.amber,
+                          child: IconButton(
+                            icon: const Icon(Icons.card_giftcard, color: Colors.black, size: 18),
+                            onPressed: _showGiftsDialog,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
+
+              // تأثير الهدية الأسطورية المتحركة في منتصف الشاشة
+              if (_activeGiftAnimation != null)
+                Center(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                    decoration: BoxDecoration(
+                      color: Colors.purple.shade900.withOpacity(0.9),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: Colors.amber, width: 2),
+                      boxShadow: [
+                        BoxShadow(color: Colors.amber.withOpacity(0.5), blurRadius: 20, spreadRadius: 5),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text('🎁 هدية أسطورية أُرسلت الآن!', style: TextStyle(color: Colors.amber, fontSize: 14, fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 8),
+                        Text(_activeGiftAnimation!, style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                  ),
+                ),
             ],
           ),
         ),
