@@ -468,7 +468,6 @@ class ProfileWalletTab extends StatelessWidget {
               const Text('اختر باقة الشحن المفضلة أو استخدم كوبون شحن فوري:', style: TextStyle(color: Colors.white54, fontSize: 12)),
               const SizedBox(height: 16),
               
-              // Voucher Input Section
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -488,8 +487,8 @@ class ProfileWalletTab extends StatelessWidget {
                           isDense: true,
                         ),
                         onSubmitted: (code) {
-                          if (code.trim().toUpperCase() == 'DODI2026' || code.trim().isNotEmpty) {
-                            onCharge(15000); // 15,000 كوينز بـ 1 دولار كمكافأة أو شحن كود
+                          if (code.trim().isNotEmpty) {
+                            onCharge(15000);
                             Navigator.pop(context);
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text('🎉 تم شحن 15,000 ماسة بنجاح عبر الكود الإداري!')),
