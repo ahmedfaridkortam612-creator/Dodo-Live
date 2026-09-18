@@ -67,10 +67,10 @@ class DodiLoginScreen extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const DodiProfileScreen()),
+                        MaterialPageRoute(builder: (context) => const DodiMainHomeScreen()),
                       );
                     },
-                    child: const Text('دخول البروفايل والغرف 🚀', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    child: const Text('دخول التطبيق والمنصة 🚀', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -83,126 +83,232 @@ class DodiLoginScreen extends StatelessWidget {
   }
 }
 
-// شاشة الملف الشخصي والمحفظة الفخمة
-class DodiProfileScreen extends StatefulWidget {
-  const DodiProfileScreen({super.key});
+// الشاشة الرئيسية التي تضم قائمة الغرف والمحفظة والبروفايل
+class DodiMainHomeScreen extends StatefulWidget {
+  const DodiMainHomeScreen({super.key});
 
   @override
-  State<DodiProfileScreen> createState() => _DodiProfileScreenState();
+  State<DodiMainHomeScreen> createState() => _DodiMainHomeScreenState();
 }
 
-class _DodiProfileScreenState extends State<DodiProfileScreen> {
-  int _diamonds = 5000;
-
-  void _chargeDiamonds() {
-    setState(() {
-      _diamonds += 1000;
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('تم شحن 1000 ماسة بنجاح 💎⚡')),
-    );
-  }
+class _DodiMainHomeScreenState extends State<DodiMainHomeScreen> {
+  int _currentIndex = 0;
+  int _userDiamonds = 5000;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('الملف الشخصي والمحفظة 👑'),
-        backgroundColor: Colors.transparent,
+    final List<Widget> screens = [
+      // تبويب الغرف المتاحة
+      RoomsFeedTab(userDiamonds: _userDiamonds),
+      // تبويب المحفظة والبروفايل
+      ProfileWalletTab(
+        diamonds: _userDiamonds,
+        onCharge: () => setState(() => _userDiamonds += 1000),
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFF1A0933), Color(0xFF0F071D)],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              const CircleAvatar(
-                radius: 50,
-                backgroundColor: Colors.pinkAccent,
-                child: Icon(Icons.person, size: 60, color: Colors.white),
-              ),
-              const SizedBox(height: 16),
-              const Text('مهندس أحمد الملك 👑', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
-              const SizedBox(height: 6),
-              const Text('ID: 88992211', style: TextStyle(color: Colors.white54, fontSize: 13)),
-              const SizedBox(height: 30),
-              
-              // صندوق المحفظة والماسات
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.purple.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.amber.withOpacity(0.6), width: 1.5),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(Icons.diamond, color: Colors.amber, size: 36),
-                        const SizedBox(width: 14),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text('رصيد الماسات 💎', style: TextStyle(color: Colors.white60, fontSize: 12)),
-                            Text('$_diamonds ماسة', style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                      ],
-                    ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.amber,
-                        foregroundColor: Colors.black,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                      ),
-                      onPressed: _chargeDiamonds,
-                      child: const Text('شحن ⚡', style: TextStyle(fontWeight: FontWeight.bold)),
-                    ),
-                  ],
-                ),
-              ),
-              const Spacer(),
-              
-              // زر الانتقال المباشر لغرفة البث
-              SizedBox(
-                width: double.infinity,
-                height: 54,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.pink,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(27)),
+    ];
+
+    return Scaffold(
+      body: screens[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        backgroundColor: const Color(0xFF1A0933),
+        selectedItemColor: Colors.pinkAccent,
+        unselectedItemColor: Colors.white54,
+        onTap: (index) => setState(() => _currentIndex = index),
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.live_tv), label: 'الغرف الحية 🎥'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'البروفايل والمحفظة 👑'),
+        ],
+      ),
+    );
+  }
+}
+
+// تبويب قائمة الغرف الحية
+class RoomsFeedTab extends StatelessWidget {
+  final int userDiamonds;
+  const RoomsFeedTab({super.key, required this.userDiamonds});
+
+  @override
+  Widget build(BuildContext context) {
+    final List<Map<String, String>> rooms = [
+      {'title': 'غرفة الملوك والنجوم ✨', 'host': 'استريمر أحمد', 'viewers': '1.2K', 'category': 'ترفيه'},
+      {'title': 'جلسة طرب وأغاني طربية 🎤', 'host': 'سارة الملكية', 'viewers': '850', 'category': 'موسيقى'},
+      {'title': 'مسابقات وتحديات الماس 💎', 'host': 'الكابتن رامي', 'viewers': '3.4K', 'category': 'تحديات'},
+      {'title': 'دردشة حرة وسوالف ليلية 🌙', 'host': 'نوران السعيد', 'viewers': '540', 'category': 'دردشة'},
+    ];
+
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('غرف البث النشطة 🔴', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(color: Colors.purple.withOpacity(0.4), borderRadius: BorderRadius.circular(15)),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.diamond, color: Colors.amber, size: 14),
+                      const SizedBox(width: 4),
+                      Text('$userDiamonds', style: const TextStyle(color: Colors.amber, fontWeight: FontWeight.bold)),
+                    ],
                   ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const DodiRoomScreen(diamonds: 5000)),
-                    );
-                  },
-                  child: const Text('الانتقال لغرفة البث المباشر 🎥', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                  childAspectRatio: 0.85,
+                ),
+                itemCount: rooms.length,
+                itemBuilder: (context, index) {
+                  final room = rooms[index];
+                  return InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DodiRoomScreen(roomTitle: room['title']!, diamonds: userDiamonds),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF2A0845), Color(0xFF160B28)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Colors.pink.withOpacity(0.3)),
+                      ),
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                decoration: BoxDecoration(color: Colors.pink, borderRadius: BorderRadius.circular(8)),
+                                child: Text(room['category']!, style: const TextStyle(fontSize: 10, color: Colors.white)),
+                              ),
+                              Row(
+                                children: [
+                                  const Icon(Icons.remove_red_eye, size: 12, color: Colors.white60),
+                                  const SizedBox(width: 4),
+                                  Text(room['viewers']!, style: const TextStyle(fontSize: 11, color: Colors.white70)),
+                                ],
+                              ),
+                            ],
+                          ),
+                          const Center(
+                            child: Icon(Icons.mic, size: 40, color: Colors.amber),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(room['title']!, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.white), maxLines: 1, overflow: TextOverflow.ellipsis),
+                              const SizedBox(height: 2),
+                              Text('بواسطة: ${room['host']}', style: const TextStyle(fontSize: 11, color: Colors.white60)),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
               ),
-              const SizedBox(height: 20),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-// غرفة البث الحي المتكاملة
-class DodiRoomScreen extends StatefulWidget {
+// تبويب المحفظة والبروفايل
+class ProfileWalletTab extends StatelessWidget {
   final int diamonds;
-  const DodiRoomScreen({super.key, required this.diamonds});
+  final VoidCallback onCharge;
+  const ProfileWalletTab({super.key, required this.diamonds, required this.onCharge});
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: [
+            const CircleAvatar(
+              radius: 50,
+              backgroundColor: Colors.pinkAccent,
+              child: Icon(Icons.person, size: 60, color: Colors.white),
+            ),
+            const SizedBox(height: 16),
+            const Text('مهندس أحمد الملك 👑', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
+            const SizedBox(height: 6),
+            const Text('ID: 88992211', style: TextStyle(color: Colors.white54, fontSize: 13)),
+            const SizedBox(height: 30),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.purple.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Colors.amber.withOpacity(0.6), width: 1.5),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Icons.diamond, color: Colors.amber, size: 36),
+                      const SizedBox(width: 14),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('رصيد الماسات 💎', style: TextStyle(color: Colors.white60, fontSize: 12)),
+                          Text('$diamonds ماسة', style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                    ],
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.amber,
+                      foregroundColor: Colors.black,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                    ),
+                    onPressed: onCharge,
+                    child: const Text('شحن ⚡', style: TextStyle(fontWeight: FontWeight.bold)),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// غرفة البث الحي المتكاملة مع المايكات والشات والهدايا
+class DodiRoomScreen extends StatefulWidget {
+  final String roomTitle;
+  final int diamonds;
+  const DodiRoomScreen({super.key, required this.roomTitle, required this.diamonds});
 
   @override
   State<DodiRoomScreen> createState() => _DodiRoomScreenState();
@@ -211,8 +317,8 @@ class DodiRoomScreen extends StatefulWidget {
 class _DodiRoomScreenState extends State<DodiRoomScreen> {
   final TextEditingController _msgController = TextEditingController();
   final List<String> _messages = [
-    'أهلاً بالجميع في غرفة البث الملكية 👑',
-    'منور يا ملك الميكات ✨',
+    'أهلاً بالجميع في الغرفة الملكية 👑',
+    'منور البث يا فنان ✨',
   ];
   late int _userDiamonds;
   String? _activeGiftAnimation;
@@ -346,10 +452,10 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
                             border: Border.all(color: Colors.pink.withOpacity(0.5)),
                           ),
                           child: Row(
-                            children: const [
-                              CircleAvatar(radius: 12, backgroundColor: Colors.pink, child: Icon(Icons.star, size: 14, color: Colors.white)),
-                              SizedBox(width: 8),
-                              Text('غرفة Dodi المميزة 👑', style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold)),
+                            children: [
+                              const CircleAvatar(radius: 12, backgroundColor: Colors.pink, child: Icon(Icons.star, size: 14, color: Colors.white)),
+                              const SizedBox(width: 8),
+                              Text(widget.roomTitle, style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold)),
                             ],
                           ),
                         ),
