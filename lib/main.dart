@@ -1,31 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'screens/live_room_screen.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  try {
-    await Firebase.initializeApp();
-  } catch (e) {
-    debugPrint("Firebase initialization error: $e");
-  }
-  runApp(const DodoLiveApp());
+void main() {
+  runApp(const MyApp());
 }
 
-class DodoLiveApp extends StatelessWidget {
-  const DodoLiveApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Dodo Live',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        useMaterial3: true,
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: const Color(0xFF120B22),
+      home: Scaffold(
+        backgroundColor: const Color(0xFF120B22),
+        body: Center(
+          child: Text(
+            'أهلاً بك يا هندسة - التطبيق يعمل بنجاح 🚀',
+            style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+            textDirection: TextDirection.rtl,
+          ),
+        ),
       ),
-      home: const LiveRoomScreen(),
     );
   }
 }
