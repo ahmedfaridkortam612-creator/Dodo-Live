@@ -93,6 +93,7 @@ class DodiMainHomeScreen extends StatefulWidget {
 class _DodiMainHomeScreenState extends State<DodiMainHomeScreen> {
   int _currentIndex = 0;
   int _userDiamonds = 6500;
+  String _selectedFrame = 'إطار التاج الملكي 👑';
   final List<Map<String, String>> _rooms = [
     {'title': 'غرفة الملوك والنجوم والتحديات ✨', 'host': 'استريمر أحمد', 'viewers': '1.5K', 'category': 'تحديات'},
     {'title': 'جلسة طرب وأغاني طربية 🎤', 'host': 'سارة الملكية', 'viewers': '890', 'category': 'موسيقى'},
@@ -122,7 +123,9 @@ class _DodiMainHomeScreenState extends State<DodiMainHomeScreen> {
       const LeaderboardTab(),
       ProfileWalletTab(
         diamonds: _userDiamonds,
+        selectedFrame: _selectedFrame,
         onCharge: () => setState(() => _userDiamonds += 2000),
+        onFrameChanged: (newFrame) => setState(() => _selectedFrame = newFrame),
       ),
     ];
 
@@ -405,20 +408,100 @@ class RoomsFeedTab extends StatelessWidget {
 
 class ProfileWalletTab extends StatelessWidget {
   final int diamonds;
+  final String selectedFrame;
   final VoidCallback onCharge;
-  const ProfileWalletTab({super.key, required this.diamonds, required this.onCharge});
+  final Function(String) onFrameChanged;
+
+  const ProfileWalletTab({
+    super.key,
+    required this.diamonds,
+    required this.selectedFrame,
+    required this.onCharge,
+    required this.onFrameChanged,
+  });
+
+  void _showFramesDialog(BuildContext context) {
+    final List<Map<String, dynamic>> frames = [
+      {'name': 'إطار التاج الملكي 👑', 'color': Colors.amber, 'desc': 'متاح لأصحاب وسام SVIP'},
+      {'name': 'إطار الأساطير المضيء ⚡', 'color': Colors.blueAccent, 'desc': 'يمنحك حضوراً خاطفاً'},
+      {'name': 'إطار وردة الجوري الفاخر 🌹', 'color': Colors.pinkAccent, 'desc': 'مخصص للداعمين الكبار'},
+    ];
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: const Color(0xFF1A0933),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(20),
+          height: 300,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('تخصيص إطار البروفايل والألقاب ✨', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+              const SizedBox(height: 6),
+              const Text('اختر الإطار الذي يظهر على صورتك في الغرف والمجتمع:', style: TextStyle(color: Colors.white54, fontSize: 12)),
+              const SizedBox(height: 16),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: frames.length,
+                  itemBuilder: (context, index) {
+                    final frame = frames[index];
+                    bool isSelected = selectedFrame == frame['name'];
+                    return ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: frame['color'] as Color,
+                        child: const Icon(Icons.person, color: Colors.black),
+                      ),
+                      title: Text(frame['name'] as String, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                      subtitle: Text(frame['desc'] as String, style: const TextStyle(color: Colors.white54, fontSize: 11)),
+                      trailing: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: isSelected ? Colors.green : Colors.pink,
+                        ),
+                        onPressed: () {
+                          onFrameChanged(frame['name'] as String);
+                          Navigator.pop(context);
+                        },
+                        child: Text(isSelected ? 'مفعل ✓' : 'استخدام', style: const TextStyle(fontSize: 11)),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Padding(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-            const CircleAvatar(
-              radius: 50,
-              backgroundColor: Colors.pinkAccent,
-              child: Icon(Icons.person, size: 60, color: Colors.white),
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  width: 104,
+                  height: 104,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.amber, width: 3),
+                  ),
+                ),
+                const CircleAvatar(
+                  radius: 46,
+                  backgroundColor: Colors.pinkAccent,
+                  child: Icon(Icons.person, size: 55, color: Colors.white),
+                ),
+              ],
             ),
             const SizedBox(height: 16),
             const Text('مهندس أحمد الملك 👑', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
@@ -426,9 +509,24 @@ class ProfileWalletTab extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(color: Colors.amber.withOpacity(0.2), borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.amber)),
-              child: const Text('وسام SVIP أسطوري ✨', style: TextStyle(color: Colors.amber, fontSize: 11, fontWeight: FontWeight.bold)),
+              child: Text('وسام SVIP أسطوري ✨ | $selectedFrame', style: const TextStyle(color: Colors.amber, fontSize: 11, fontWeight: FontWeight.bold)),
             ),
             const SizedBox(height: 20),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  side: const BorderSide(color: Colors.pinkAccent),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                ),
+                icon: const Icon(Icons.star, color: Colors.amber),
+                label: const Text('تغيير إطار البروفايل والشارات الشخصية 🎨', style: TextStyle(fontWeight: FontWeight.bold)),
+                onPressed: () => _showFramesDialog(context),
+              ),
+            ),
+            const SizedBox(height: 16),
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -471,7 +569,6 @@ class ProfileWalletTab extends StatelessWidget {
   }
 }
 
-// غرفة البث التفاعلية مع ألعاب المصادفة والهدايا الملكية العائمة
 class DodiRoomScreen extends StatefulWidget {
   final String roomTitle;
   final int diamonds;
@@ -504,7 +601,6 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
     });
   }
 
-  // نافذة ألعاب الحظ التفاعلية داخل الغرفة (مثل الألعاب الترفيهية المشتركة)
   void _showMiniGamesDialog() {
     showModalBottomSheet(
       context: context,
@@ -680,7 +776,6 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
             children: [
               Column(
                 children: [
-                  // الشريط العلوي
                   Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Row(
@@ -724,8 +819,6 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
                       ],
                     ),
                   ),
-
-                  // شبكة المايكات (Seats) مع إظهار ألقاب الـ VIP
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
                     child: Row(
@@ -750,8 +843,6 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
                       )),
                     ),
                   ),
-
-                  // شات الغرفة الحي
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -774,8 +865,6 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
                       ),
                     ),
                   ),
-
-                  // شريط المحادثة وأزرار التفاعل والألعاب والسفلي
                   Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Row(
@@ -821,8 +910,6 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
                   ),
                 ],
               ),
-
-              // تنبيه الهدية أو اللعبة العائم الأسطوري في أعلى/منتصف الشاشة لكل الحضور
               if (_activeGlobalAlert != null)
                 Positioned(
                   top: 70,
