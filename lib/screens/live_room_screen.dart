@@ -56,11 +56,12 @@ class _LiveRoomScreenState extends State<LiveRoomScreen> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: Colors.black54,
+                      color: Colors.black.withOpacity(0.5),
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(color: Colors.white10),
                     ),
                     child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: const [
                         CircleAvatar(radius: 12, backgroundColor: Colors.pink, child: Icon(Icons.person, size: 14, color: Colors.white)),
                         SizedBox(width: 8),
@@ -69,7 +70,7 @@ class _LiveRoomScreenState extends State<LiveRoomScreen> {
                     ),
                   ),
                   IconButton(
-                    style: IconButton.styleFrom(backgroundColor: Colors.black45),
+                    style: IconButton.styleFrom(backgroundColor: Colors.black.withOpacity(0.45)),
                     icon: const Icon(Icons.close, color: Colors.white),
                     onPressed: () => Navigator.pop(context),
                   ),
@@ -99,7 +100,7 @@ class _LiveRoomScreenState extends State<LiveRoomScreen> {
                             margin: const EdgeInsets.only(bottom: 8),
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                             decoration: BoxDecoration(
-                              color: Colors.black45,
+                              color: Colors.black.withOpacity(0.45),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
@@ -119,7 +120,7 @@ class _LiveRoomScreenState extends State<LiveRoomScreen> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       decoration: BoxDecoration(
-                        color: Colors.black60,
+                        color: Colors.black.withOpacity(0.6),
                         borderRadius: BorderRadius.circular(25),
                         border: Border.all(color: Colors.white24),
                       ),
