@@ -84,7 +84,6 @@ class DodiLoginScreen extends StatelessWidget {
 }
 
 class DodiRoomScreen extends StatelessWidget {
-  const DodiRoomScreen({super.callStyle: ''}); // syntax safe
   const DodiRoomScreen({super.key});
 
   @override
