@@ -4,13 +4,13 @@ void main() {
   runApp(const DodiLiveApp());
 }
 
-// نموذج بيانات المستخدم الحقيقي لتجنب أي شكل وهمي
+// نموذج بيانات المستخدم الحقيقي
 class UserProfileModel {
   static String name = 'مهندس أحمد الملك 🦁';
   static String age = '28';
   static String gender = 'ذكر 👨';
   static String country = 'مصر 🇪🇬';
-  static int diamonds = 27500;
+  static int diamonds = 35000;
   static String selectedFrame = 'إطار الأسد الملكي الذهبي 🦁👑';
 }
 
@@ -33,7 +33,7 @@ class DodiLiveApp extends StatelessWidget {
 }
 
 // ====================================================
-// 1. شاشة البداية والتحميل (Splash Screen المماثلة لتصميمك)
+// 1. شاشة البداية والتحميل (Splash Screen الاحترافية)
 // ====================================================
 class DodiSplashScreen extends StatefulWidget {
   const DodiSplashScreen({super.key});
@@ -42,20 +42,19 @@ class DodiSplashScreen extends StatefulWidget {
   State<DodiSplashScreen> createState() => _DodiSplashScreenState();
 }
 
-class _DodiSplashScreenState extends State<DodiSplashScreen> with SingleTickerProviderStateMixin {
-  double _progressValue = 0.2;
+class _DodiSplashScreenState extends State<DodiSplashScreen> {
+  double _progressValue = 0.3;
 
   @override
   void initState() {
     super.initState();
-    // محاكاة تحميل حقيقي واحترافي لشاشة البداية
-    Future.delayed(const Duration(milliseconds: 600), () {
-      if (mounted) setState(() => _progressValue = 0.6);
+    Future.delayed(const Duration(milliseconds: 700), () {
+      if (mounted) setState(() => _progressValue = 0.7);
     });
-    Future.delayed(const Duration(milliseconds: 1400), () {
-      if (mounted) setState(() => _progressValue = 0.9);
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      if (mounted) setState(() => _progressValue = 1.0);
     });
-    Future.delayed(const Duration(milliseconds: 2200), () {
+    Future.delayed(const Duration(milliseconds: 2000), () {
       if (mounted) {
         Navigator.pushReplacement(
           context,
@@ -84,35 +83,21 @@ class _DodiSplashScreenState extends State<DodiSplashScreen> with SingleTickerPr
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Spacer(),
-                // شعار التطبيق الفاخر (الطير الملكي المجنح)
                 Container(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(22),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    gradient: LinearGradient(
-                      colors: [Colors.pinkAccent.withOpacity(0.3), Colors.amber.withOpacity(0.2)],
-                    ),
+                    gradient: LinearGradient(colors: [Colors.pinkAccent.withOpacity(0.4), Colors.amber.withOpacity(0.3)]),
                   ),
-                  child: const Icon(Icons.flutter_dash, size: 90, color: Colors.amberAccent),
+                  child: const Icon(Icons.live_tv_rounded, size: 85, color: Colors.amberAccent),
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  'دودو لايف',
-                  style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: 1.5),
-                ),
+                const Text('دودو لايف', style: TextStyle(fontSize: 38, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: 1.5)),
                 const SizedBox(height: 4),
-                const Text(
-                  'Dodi live',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.amberAccent, letterSpacing: 2),
-                ),
+                const Text('Dodi live', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.amberAccent, letterSpacing: 2)),
                 const SizedBox(height: 12),
-                const Text(
-                  'عالمك الخاص من البث المباشر\nYour World of Live Streaming',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 13, color: Colors.white60, height: 1.4),
-                ),
+                const Text('عالمك الخاص من البث المباشر\nYour World of Live Streaming', textAlign: TextAlign.center, style: TextStyle(fontSize: 13, color: Colors.white60, height: 1.4)),
                 const Spacer(),
-                // شريط التحميل الاحترافي المماثل للصورة
                 Column(
                   children: [
                     Row(
@@ -145,7 +130,7 @@ class _DodiSplashScreenState extends State<DodiSplashScreen> with SingleTickerPr
 }
 
 // ====================================================
-// 2. شاشة تسجيل الدخول الاحترافية (أيقونات الجيميل والهاتف)
+// 2. شاشة تسجيل الدخول الاحترافية (جيميل وهاتف)
 // ====================================================
 class DodiAuthScreen extends StatelessWidget {
   const DodiAuthScreen({super.key});
@@ -155,11 +140,7 @@ class DodiAuthScreen extends StatelessWidget {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFF2A0845), Color(0xFF120B22)],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
+          gradient: LinearGradient(colors: [Color(0xFF2A0845), Color(0xFF120B22)], begin: Alignment.topCenter, end: Alignment.bottomCenter),
         ),
         child: SafeArea(
           child: Padding(
@@ -168,28 +149,17 @@ class DodiAuthScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Spacer(),
-                const Icon(Icons.live_tv_rounded, size: 95, color: Colors.pinkAccent),
+                const Icon(Icons.local_fire_department, size: 95, color: Colors.pinkAccent),
                 const SizedBox(height: 16),
-                const Text(
-                  'Dodi Live',
-                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: 2),
-                ),
+                const Text('Dodi Live', style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: 2)),
                 const SizedBox(height: 8),
-                const Text(
-                  'تسجيل الدخول للمنصة والمجتمع الفاخر',
-                  style: TextStyle(fontSize: 14, color: Colors.white60),
-                  textAlign: TextAlign.center,
-                ),
+                const Text('منصة البث المباشر والمجتمع التفاعلي الفاخر', style: TextStyle(fontSize: 14, color: Colors.white60), textAlign: TextAlign.center),
                 const Spacer(),
                 SizedBox(
                   width: double.infinity,
                   height: 52,
                   child: ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.pink,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
-                    ),
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.pink, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26))),
                     onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const ProfileSetupScreen())),
                     icon: const Icon(Icons.phone_android),
                     label: const Text('تسجيل الدخول برقم الهاتف 📱', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
@@ -200,11 +170,7 @@ class DodiAuthScreen extends StatelessWidget {
                   width: double.infinity,
                   height: 52,
                   child: OutlinedButton.icon(
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.pinkAccent, width: 1.5),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
-                    ),
+                    style: OutlinedButton.styleFrom(foregroundColor: Colors.white, side: const BorderSide(color: Colors.pinkAccent, width: 1.5), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26))),
                     onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const ProfileSetupScreen())),
                     icon: const Icon(Icons.g_mobiledata, size: 30, color: Colors.amber),
                     label: const Text('المتابعة بحساب Google 🌐', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
@@ -221,7 +187,7 @@ class DodiAuthScreen extends StatelessWidget {
 }
 
 // ====================================================
-// 3. شاشة إعداد البروفايل (الاسم، السن، النوع، الدولة والصورة)
+// 3. شاشة إعداد البروفايل الشخصي الحقيقي
 // ====================================================
 class ProfileSetupScreen extends StatefulWidget {
   const ProfileSetupScreen({super.key});
@@ -239,7 +205,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('إعداد الملف الشخصي الاحترافي ✨'), backgroundColor: const Color(0xFF1A0933)),
+      appBar: AppBar(title: const Text('إعداد البروفايل الشخصي ✨'), backgroundColor: const Color(0xFF1A0933)),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(colors: [Color(0xFF2A0845), Color(0xFF120B22)], begin: Alignment.topCenter, end: Alignment.bottomCenter),
@@ -264,7 +230,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                       radius: 18,
                       child: IconButton(
                         icon: const Icon(Icons.camera_alt, size: 16, color: Colors.black),
-                        onPressed: () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('📸 تم رفع وتحديث الصورة الشخصية بنجاح!'))),
+                        onPressed: () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('📸 تم تحديث الصورة الشخصية بنجاح!'))),
                       ),
                     ),
                   ),
@@ -275,7 +241,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
             TextField(
               controller: _nameController,
               style: const TextStyle(color: Colors.white),
-              decoration: InputDecoration(labelText: 'الاسم المستعار للحساب', filled: true, fillColor: Colors.black45, border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none)),
+              decoration: InputDecoration(labelText: 'اسم المستخدم المستعار', filled: true, fillColor: Colors.black45, border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none)),
             ),
             const SizedBox(height: 16),
             TextField(
@@ -388,7 +354,7 @@ class _DodiMainHomeScreenState extends State<DodiMainHomeScreen> {
 }
 
 // ====================================================
-// 4. لوحة تحكم الأدمن لشحن الرصيد الفوري
+// 4. لوحة تحكم الأدمن لشحن الرصيد بالـ ID
 // ====================================================
 class AdminDepositScreen extends StatefulWidget {
   const AdminDepositScreen({super.key});
@@ -679,7 +645,7 @@ class RoomsFeedTab extends StatelessWidget {
 }
 
 // ====================================================
-// 5. البروفايل الشخصي وتخصيص الإطارات الملكية
+// 5. البروفايل الفاخر مع دعم الإطارات المتحركة والأوسمة الأسطورية
 // ====================================================
 class ProfileWalletTab extends StatefulWidget {
   final VoidCallback onStateChanged;
@@ -689,13 +655,30 @@ class ProfileWalletTab extends StatefulWidget {
   State<ProfileWalletTab> createState() => _ProfileWalletTabState();
 }
 
-class _ProfileWalletTabState extends State<ProfileWalletTab> {
+class _ProfileWalletTabState extends State<ProfileWalletTab> with SingleTickerProviderStateMixin {
+  late AnimationController _animController;
+
+  @override
+  void initState() {
+    super.initState();
+    // تحريك الإطار بشكل مستمر لإعطاء تأثير حواري متحرك ونابض (Animated Frame)
+    _animController = AnimationController(vsync: this, duration: const Duration(seconds: 2))
+      ..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _animController.dispose();
+    super.dispose();
+  }
+
   void _showFramesDialog(BuildContext context) {
+    // قائمة الإطارات المستوحاة من التصاميم التي أرسلتها (الأسد الملكي، الأدمن، التنانين، والمستويات)
     final List<Map<String, dynamic>> frames = [
-      {'name': 'إطار الأسد الملكي الذهبي 🦁👑', 'color': Colors.amber, 'desc': 'الأفخم والأكثر هيبة (VIP الأعلى)'},
-      {'name': 'إطار التنانين المزدوجة النارية 🐉🔥', 'color': Colors.blueAccent, 'desc': 'تصميم أسطوري خاص بالملوك'},
-      {'name': 'إطار الـ Admin الفاخر ⚡', 'color': Colors.redAccent, 'desc': 'مخصص لإدارة التطبيق العليا'},
-      {'name': 'إطار الأجنحة الملكية الوردية ✨', 'color': Colors.purpleAccent, 'desc': 'للداعمين الكبار بالمستويات العليا'},
+      {'name': 'إطار الأسد الملكي الذهبي 🦁👑', 'color': Colors.amber, 'desc': 'الإطار الأسطوري الفخم للـ VIP'},
+      {'name': 'إطار الأدمن الذهبي الملكي ⚡', 'color': Colors.redAccent, 'desc': 'مخصص للإدارة العليا بالتطبيق'},
+      {'name': 'إطار التنانين المزدوجة النارية 🐉🔥', 'color': Colors.blueAccent, 'desc': 'تصميم قتالي ناري أسطوري'},
+      {'name': 'إطار المستويات الفاخر (Lv.40) 🔥', 'color': Colors.deepOrange, 'desc': 'أعلى مستويات الأساطير'},
     ];
 
     showModalBottomSheet(
@@ -705,13 +688,13 @@ class _ProfileWalletTabState extends State<ProfileWalletTab> {
       builder: (context) {
         return Container(
           padding: const EdgeInsets.all(20),
-          height: 350,
+          height: 380,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('تخصيص الإطارات الملكية المرتبة 👑', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+              const Text('تخصيص الإطارات المتحركة والأوسمة 👑', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
               const SizedBox(height: 6),
-              const Text('اختر الإطار الأسطوري ليظهر على بروفايلك:', style: TextStyle(color: Colors.white54, fontSize: 12)),
+              const Text('اختر الإطار الأسطوري ليتحيط بصورتك ويظهر للجميع:', style: TextStyle(color: Colors.white54, fontSize: 12)),
               const SizedBox(height: 16),
               Expanded(
                 child: ListView.builder(
@@ -750,16 +733,33 @@ class _ProfileWalletTabState extends State<ProfileWalletTab> {
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                Container(
-                  width: 110,
-                  height: 110,
-                  decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.amber, width: 3)),
-                ),
-                const CircleAvatar(radius: 48, backgroundColor: Colors.pinkAccent, child: Icon(Icons.person, size: 55, color: Colors.white)),
-              ],
+            // تصميم البروفايل مع تأثير الإطار المتحرك والنابض (Animated Frame Effect)
+            AnimatedBuilder(
+              animation: _animController,
+              builder: (context, child) {
+                return Container(
+                  padding: EdgeInsets.all(4 + (_animController.value * 4)),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      colors: [Colors.amber, Colors.pinkAccent, Colors.blue, Colors.amber],
+                      stops: [0.0, _animController.value, 0.8, 1.0],
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.amber.withOpacity(0.5 + (_animController.value * 0.4)),
+                        blurRadius: 15 + (_animController.value * 10),
+                        spreadRadius: 2,
+                      ),
+                    ],
+                  ),
+                  child: const CircleAvatar(
+                    radius: 50,
+                    backgroundColor: Colors.black,
+                    child: CircleAvatar(radius: 46, backgroundColor: Colors.pinkAccent, child: Icon(Icons.person, size: 55, color: Colors.white)),
+                  ),
+                );
+              },
             ),
             const SizedBox(height: 16),
             Text(UserProfileModel.name, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
@@ -777,7 +777,7 @@ class _ProfileWalletTabState extends State<ProfileWalletTab> {
               child: OutlinedButton.icon(
                 style: OutlinedButton.styleFrom(foregroundColor: Colors.white, side: const BorderSide(color: Colors.pinkAccent), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)), padding: const EdgeInsets.symmetric(vertical: 12)),
                 icon: const Icon(Icons.star, color: Colors.amber),
-                label: const Text('تغيير الإطار الملكي والأوسمة 🎨', style: TextStyle(fontWeight: FontWeight.bold)),
+                label: const Text('تغيير الإطار المتحرك والأوسمة 🎨', style: TextStyle(fontWeight: FontWeight.bold)),
                 onPressed: () => _showFramesDialog(context),
               ),
             ),
@@ -821,7 +821,7 @@ class _ProfileWalletTabState extends State<ProfileWalletTab> {
 }
 
 // ====================================================
-// 6. غرفة البث مع الهدايا المتحركة وشرايط البث العلوية
+// 6. غرفة البث مع الهدايا المتحركة والشرايط الإعلانية العلوية
 // ====================================================
 class DodiRoomScreen extends StatefulWidget {
   final String roomTitle;
@@ -835,7 +835,7 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
   final TextEditingController _msgController = TextEditingController();
   final List<String> _messages = [
     'أهلاً بالجميع في الغرفة التفاعلية الأسطورية 👑',
-    'استعدوا لمسابقات وهدايا القصور الطائرة الآن! 🏰',
+    'استعدوا لمسابقات وهدايا القصور والسيارات الرياضية الآن! 🏎️',
   ];
   String? _animatedGlobalBanner;
 
@@ -899,6 +899,7 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
         if (UserProfileModel.diamonds >= cost) {
           setState(() {
             UserProfileModel.diamonds -= cost;
+            // شريط إعلاني متحرك يعرض الهدية الفخمة في الغرفة بالكامل
             _animatedGlobalBanner = '🎉 تبريكات ملكية: ${UserProfileModel.name} أرسل ($giftName) المتحركة للغرفة!';
             _messages.add('🎁 أرسلت هدية متحركة: $giftName (-$cost ماسة)');
           });
