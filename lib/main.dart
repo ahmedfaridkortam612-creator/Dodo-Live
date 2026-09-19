@@ -4,12 +4,11 @@ void main() {
   runApp(const DodiLiveApp());
 }
 
-// نموذج بيانات المستخدم الحقيقي
 class UserProfileModel {
   static String name = 'مهندس أحمد الملك';
   static String age = '28';
-  static String gender = 'ذكر 👨‍🔧';
-  static String country = 'مصر 🇪🇬';
+  static String gender = 'ذكر';
+  static String country = 'مصر';
   static int diamonds = 45000;
   static String selectedFrame = 'الملكي الذهبي';
 }
@@ -32,9 +31,6 @@ class DodiLiveApp extends StatelessWidget {
   }
 }
 
-// =====================================================================
-// 1. شاشة البداية والتحميل (Splash Screen)
-// =====================================================================
 class DodiSplashScreen extends StatefulWidget {
   const DodiSplashScreen({super.key});
 
@@ -46,7 +42,6 @@ class _DodiSplashScreenState extends State<DodiSplashScreen> {
   @override
   void initState() {
     super.initState();
-    // الانتقال تلقائياً بعد 3 ثوانٍ إلى الشاشة الرئيسية
     Future.delayed(const Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
@@ -60,7 +55,7 @@ class _DodiSplashScreenState extends State<DodiSplashScreen> {
     return Scaffold(
       body: SizedBox.expand(
         child: Image.asset(
-          'assets/images/splash_background.PNG', // مطابق لاسم الصورة المرفوعة بحروف الكبيرة
+          'assets/images/splash_background.PNG',
           fit: BoxFit.cover,
         ),
       ),
@@ -68,9 +63,6 @@ class _DodiSplashScreenState extends State<DodiSplashScreen> {
   }
 }
 
-// =====================================================================
-// 2. الشاشة الرئيسية مع نظام الليفل والإطارات والأشرطة
-// =====================================================================
 class MainHomeScreen extends StatefulWidget {
   const MainHomeScreen({super.key});
 
@@ -79,7 +71,7 @@ class MainHomeScreen extends StatefulWidget {
 }
 
 class _MainHomeScreenState extends State<MainHomeScreen> {
-  int userLevel = 20; // تجربة مستوى المستخدم الحالي (يمكن تغييره: 1, 10, 20, 30, 40)
+  int userLevel = 20;
   final TextEditingController _commentController = TextEditingController();
   final List<Map<String, dynamic>> _comments = [
     {
@@ -117,7 +109,6 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // بطاقة الملف الشخصي مع الإطار والمستوى
             Card(
               color: Colors.purple.shade950,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -125,7 +116,6 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                 padding: const EdgeInsets.all(16.0),
                 child: Row(
                   children: [
-                    // إطار البروفايل من الصورة الشاملة أو الإطارات الفردية
                     Stack(
                       alignment: Alignment.center,
                       children: [
@@ -134,7 +124,6 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                           backgroundColor: Colors.grey,
                           child: Icon(Icons.person, size: 40, color: Colors.white),
                         ),
-                        // عرض الإطار بناءً على الليفيل من levels_sheet.PNG
                         LevelAssetWidget(
                           level: userLevel,
                           assetType: AssetType.profileFrame,
@@ -154,7 +143,6 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                           const SizedBox(height: 4),
                           Text('المستوى: Lv.$userLevel', style: const TextStyle(color: Colors.amber)),
                           const SizedBox(height: 8),
-                          // شارة الليفيل للملف الشخصي
                           LevelAssetWidget(
                             level: userLevel,
                             assetType: AssetType.badge,
@@ -173,8 +161,6 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.purpleAccent),
             ),
             const SizedBox(height: 12),
-            
-            // قائمة التعليقات مع الأشرطة المخصصة لكل ليفيل
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -192,14 +178,12 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                   ),
                   child: Row(
                     children: [
-                      // شارة الليفيل الصغيرة بجانب التعليق
                       LevelAssetWidget(
                         level: commentLevel,
                         assetType: AssetType.badge,
                         size: 30,
                       ),
                       const SizedBox(width: 8),
-                      // شريط التعليق المستمد من levels_sheet.PNG
                       Expanded(
                         child: Stack(
                           alignment: Alignment.centerLeft,
@@ -216,7 +200,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 12.0),
                               child: Text(
-                                '${comment['name']}:${comment['text']}',
+                                '${comment['name']}: ${comment['text']}',
                                 style: const TextStyle(fontSize: 13, color: Colors.white),
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -230,8 +214,6 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
               },
             ),
             const SizedBox(height: 20),
-            
-            // خانة كتابة تعليق جديد
             Row(
               children: [
                 Expanded(
@@ -271,9 +253,6 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
   }
 }
 
-// =====================================================================
-// 3. أداة قص وعرض العناصر تلقائياً من صورة `levels_sheet.PNG` الشاملة
-// =====================================================================
 enum AssetType { profileFrame, badge, banner }
 
 class LevelAssetWidget extends StatelessWidget {
@@ -290,7 +269,6 @@ class LevelAssetWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // تحديد الصف بناءً على مستوى الليفيل (1, 10, 20, 30, 40)
     int rowIndex = 0;
     if (level == 1) rowIndex = 0;
     else if (level == 10) rowIndex = 1;
@@ -298,13 +276,11 @@ class LevelAssetWidget extends StatelessWidget {
     else if (level == 30) rowIndex = 3;
     else if (level == 40) rowIndex = 4;
 
-    // تحديد العمود (0: إطار، 1: شارة الذئب، 2: الشريط)
     int colIndex = 0;
     if (assetType == AssetType.profileFrame) colIndex = 0;
     else if (assetType == AssetType.badge) colIndex = 1;
     else if (assetType == AssetType.banner) colIndex = 2;
 
-    // إحداثيات القص التقريبية بناءً على تصميم صورة الشبكة الشاملة
     double dx = colIndex * 110.0;
     double dy = rowIndex * 110.0;
 
@@ -317,7 +293,7 @@ class LevelAssetWidget extends StatelessWidget {
             Transform.translate(
               offset: Offset(-dx, -dy),
               child: Image.asset(
-                'assets/images/levels_sheet.PNG', // صورة الشبكة الشاملة المرفوعة
+                'assets/images/levels_sheet.PNG',
                 width: 350,
                 fit: BoxFit.none,
                 alignment: Alignment.topLeft,
