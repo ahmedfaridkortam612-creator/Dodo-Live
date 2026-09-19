@@ -33,7 +33,7 @@ class DodiLiveApp extends StatelessWidget {
 }
 
 // ====================================================
-// 1. شاشة البداية والتحميل (Splash Screen الاحترافية)
+// 1. شاشة البداية والتحميل (Splash Screen)
 // ====================================================
 class DodiSplashScreen extends StatefulWidget {
   const DodiSplashScreen({super.key});
@@ -130,7 +130,7 @@ class _DodiSplashScreenState extends State<DodiSplashScreen> {
 }
 
 // ====================================================
-// 2. شاشة تسجيل الدخول الاحترافية (جيميل وهاتف)
+// 2. شاشة تسجيل الدخول
 // ====================================================
 class DodiAuthScreen extends StatelessWidget {
   const DodiAuthScreen({super.key});
@@ -187,7 +187,7 @@ class DodiAuthScreen extends StatelessWidget {
 }
 
 // ====================================================
-// 3. شاشة إعداد البروفايل الشخصي الحقيقي
+// 3. شاشة إعداد البروفايل
 // ====================================================
 class ProfileSetupScreen extends StatefulWidget {
   const ProfileSetupScreen({super.key});
@@ -354,7 +354,7 @@ class _DodiMainHomeScreenState extends State<DodiMainHomeScreen> {
 }
 
 // ====================================================
-// 4. لوحة تحكم الأدمن لشحن الرصيد بالـ ID
+// 4. لوحة تحكم الأدمن
 // ====================================================
 class AdminDepositScreen extends StatefulWidget {
   const AdminDepositScreen({super.key});
@@ -645,7 +645,7 @@ class RoomsFeedTab extends StatelessWidget {
 }
 
 // ====================================================
-// 5. البروفايل الفاخر مع دعم الإطارات المتحركة والأوسمة الأسطورية
+// 5. البروفايل الفاخر مع الإطارات المتحركة
 // ====================================================
 class ProfileWalletTab extends StatefulWidget {
   final VoidCallback onStateChanged;
@@ -818,7 +818,7 @@ class _ProfileWalletTabState extends State<ProfileWalletTab> with SingleTickerPr
 }
 
 // ====================================================
-// 6. غرفة البث مع الهدايا المتحركة والشرايط الإعلانية العلوية
+// 6. غرفة البث مع المايكات التفاعلية الحقيقية الهادفة
 // ====================================================
 class DodiRoomScreen extends StatefulWidget {
   final String roomTitle;
@@ -832,9 +832,17 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
   final TextEditingController _msgController = TextEditingController();
   final List<String> _messages = [
     'أهلاً بالجميع في الغرفة التفاعلية الأسطورية 👑',
-    'استعدوا لمسابقات وهدايا القصور والسيارات الرياضية الآن! 🏎️',
+    'اضغط على أي مايك أدناه للصعود والتحدث مع الأساطير! 🎙️',
   ];
   String? _animatedGlobalBanner;
+
+  // حالة المايكات الـ 4 داخل الغرفة (اسم المستخدم على المايك، هل هو مكتوم، هل المايك فارغ)
+  final List<Map<String, dynamic>> _micSlots = [
+    {'user': 'استريمر أحمد (مضيف)', 'isMuted': false, 'isEmpty': false, 'isSpeaking': true},
+    {'user': 'مكان فارغ (اضغط للصعود)', 'isMuted': false, 'isEmpty': true, 'isSpeaking': false},
+    {'user': 'مكان فارغ (اضغط للصعود)', 'isMuted': false, 'isEmpty': true, 'isSpeaking': false},
+    {'user': 'مكان فارغ (اضغط للصعود)', 'isMuted': false, 'isEmpty': true, 'isSpeaking': false},
+  ];
 
   void _send() {
     if (_msgController.text.trim().isEmpty) return;
@@ -842,6 +850,90 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
       _messages.add('${UserProfileModel.name}: ${_msgController.text.trim()}');
       _msgController.clear();
     });
+  }
+
+  // التحكم التفاعلي عند الضغط على أي مايك
+  void _onMicTapped(int index) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: const Color(0xFF1A0933),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (context) {
+        bool isEmpty = _micSlots[index]['isEmpty'];
+        return Container(
+          padding: const EdgeInsets.all(20),
+          height: 220,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('إدارة المايك رقم ${index + 1} 🎙️', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+              const SizedBox(height: 10),
+              Text('الحالة الحالية: ${_micSlots[index]['user']}', style: const TextStyle(color: Colors.amber, fontSize: 13)),
+              const Spacer(),
+              if (isEmpty)
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.pink),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      setState(() {
+                        _micSlots[index] = {
+                          'user': UserProfileModel.name,
+                          'isMuted': false,
+                          'isEmpty': false,
+                          'isSpeaking': true,
+                        };
+                        _messages.add('🎙️ صعد المستخدم (${UserProfileModel.name}) إلى المايك ${index + 1}');
+                      });
+                    },
+                    child: const Text('صعود إلى المايك الآن 🚀', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  ),
+                )
+              else
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          setState(() {
+                            bool currentMute = _micSlots[index]['isMuted'];
+                            _micSlots[index]['isMuted'] = !currentMute;
+                            _messages.add('🔊 تم ${!currentMute ? "كتم" : "إلغاء كتم"} المايك ${index + 1}');
+                          });
+                        },
+                        child: Text(_micSlots[index]['isMuted'] ? 'إلغاء الكتم 🔊' : 'كتم المايك 🔇', style: const TextStyle(color: Colors.white)),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          setState(() {
+                            _micSlots[index] = {
+                              'user': 'مكان فارغ (اضغط للصعود)',
+                              'isMuted': false,
+                              'isEmpty': true,
+                              'isSpeaking': false,
+                            };
+                            _messages.add('⬇️ نزول المستخدم من المايك ${index + 1}');
+                          });
+                        },
+                        child: const Text('نزول من المايك 🚪', style: TextStyle(color: Colors.white)),
+                      ),
+                    ),
+                  ],
+                ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   void _showGiftsDialog() {
@@ -970,21 +1062,61 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
                       ],
                     ),
                   ),
+                  // المايكات التفاعلية الحقيقية التي تستجيب للضغط والصعود والكتم
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: List.generate(4, (index) => Column(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(2),
-                            decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: index == 0 ? Colors.amber : Colors.purpleAccent, width: 2)),
-                            child: CircleAvatar(radius: 28, backgroundColor: Colors.black54, child: Icon(index == 0 ? Icons.mic : Icons.mic_none, color: index == 0 ? Colors.amber : Colors.white70, size: 22)),
+                      children: List.generate(4, (index) {
+                        final mic = _micSlots[index];
+                        bool isEmpty = mic['isEmpty'];
+                        bool isMuted = mic['isMuted'];
+                        return GestureDetector(
+                          onTap: () => _onMicTapped(index),
+                          child: Column(
+                            children: [
+                              Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(2),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(color: isEmpty ? Colors.white24 : Colors.amber, width: 2.5),
+                                    ),
+                                    child: CircleAvatar(
+                                      radius: 28,
+                                      backgroundColor: isEmpty ? Colors.black54 : Colors.purple.shade900,
+                                      child: Icon(
+                                        isEmpty ? Icons.mic_off : (isMuted ? Icons.mic_off : Icons.mic),
+                                        color: isEmpty ? Colors.white30 : (isMuted ? Colors.red : Colors.amber),
+                                        size: 24,
+                                      ),
+                                    ),
+                                  ),
+                                  if (!isEmpty && isMuted)
+                                    const Positioned(
+                                      bottom: 0,
+                                      right: 0,
+                                      child: CircleAvatar(radius: 8, backgroundColor: Colors.red, child: Icon(Icons.close, size: 10, color: Colors.white)),
+                                    ),
+                                ],
+                              ),
+                              const SizedBox(height: 6),
+                              SizedBox(
+                                width: 70,
+                                child: Text(
+                                  mic['user'].split(' ')[0],
+                                  style: TextStyle(color: isEmpty ? Colors.white54 : Colors.amber, fontSize: 10, fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.center,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 6),
-                          Text(index == 0 ? 'مضيف VIP' : 'مايك ${index + 1}', style: TextStyle(color: index == 0 ? Colors.amber : Colors.white70, fontSize: 10, fontWeight: FontWeight.bold)),
-                        ],
-                      )),
+                        );
+                      }),
                     ),
                   ),
                   Expanded(
