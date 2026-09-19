@@ -10,7 +10,7 @@ class UserProfileModel {
   static String age = '28';
   static String gender = 'ذكر 👨';
   static String country = 'مصر 🇪🇬';
-  static int diamonds = 35000;
+  static int diamonds = 45000;
   static String selectedFrame = 'إطار الأسد الملكي الذهبي 🦁👑';
 }
 
@@ -20,7 +20,7 @@ class DodiLiveApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Dodi Live',
+      title: 'Dody Live',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
@@ -33,7 +33,7 @@ class DodiLiveApp extends StatelessWidget {
 }
 
 // ====================================================
-// 1. شاشة البداية والتحميل (Splash Screen)
+// 1. شاشة التحميل الاحترافية (Splash Screen)
 // ====================================================
 class DodiSplashScreen extends StatefulWidget {
   const DodiSplashScreen({super.key});
@@ -48,13 +48,13 @@ class _DodiSplashScreenState extends State<DodiSplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(milliseconds: 700), () {
+    Future.delayed(const Duration(milliseconds: 600), () {
       if (mounted) setState(() => _progressValue = 0.7);
     });
-    Future.delayed(const Duration(milliseconds: 1500), () {
+    Future.delayed(const Duration(milliseconds: 1400), () {
       if (mounted) setState(() => _progressValue = 1.0);
     });
-    Future.delayed(const Duration(milliseconds: 2000), () {
+    Future.delayed(const Duration(milliseconds: 1900), () {
       if (mounted) {
         Navigator.pushReplacement(
           context,
@@ -92,9 +92,9 @@ class _DodiSplashScreenState extends State<DodiSplashScreen> {
                   child: const Icon(Icons.live_tv_rounded, size: 85, color: Colors.amberAccent),
                 ),
                 const SizedBox(height: 20),
-                const Text('دودو لايف', style: TextStyle(fontSize: 38, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: 1.5)),
+                const Text('دودي لايف', style: TextStyle(fontSize: 38, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: 1.5)),
                 const SizedBox(height: 4),
-                const Text('Dodi live', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.amberAccent, letterSpacing: 2)),
+                const Text('Dody live', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.amberAccent, letterSpacing: 2)),
                 const SizedBox(height: 12),
                 const Text('عالمك الخاص من البث المباشر\nYour World of Live Streaming', textAlign: TextAlign.center, style: TextStyle(fontSize: 13, color: Colors.white60, height: 1.4)),
                 const Spacer(),
@@ -151,7 +151,7 @@ class DodiAuthScreen extends StatelessWidget {
                 const Spacer(),
                 const Icon(Icons.local_fire_department, size: 95, color: Colors.pinkAccent),
                 const SizedBox(height: 16),
-                const Text('Dodi Live', style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: 2)),
+                const Text('Dody Live', style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: 2)),
                 const SizedBox(height: 8),
                 const Text('منصة البث المباشر والمجتمع التفاعلي الفاخر', style: TextStyle(fontSize: 14, color: Colors.white60), textAlign: TextAlign.center),
                 const Spacer(),
@@ -187,7 +187,7 @@ class DodiAuthScreen extends StatelessWidget {
 }
 
 // ====================================================
-// 3. شاشة إعداد البروفايل
+// 3. شاشة إعداد البروفايل الشخصي الحقيقي
 // ====================================================
 class ProfileSetupScreen extends StatefulWidget {
   const ProfileSetupScreen({super.key});
@@ -325,7 +325,7 @@ class _DodiMainHomeScreenState extends State<DodiMainHomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dodi Live 🌟', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+        title: const Text('Dody Live 🌟', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
         backgroundColor: const Color(0xFF1A0933),
         automaticallyImplyLeading: false,
         actions: [
@@ -354,7 +354,7 @@ class _DodiMainHomeScreenState extends State<DodiMainHomeScreen> {
 }
 
 // ====================================================
-// 4. لوحة تحكم الأدمن
+// 4. لوحة تحكم الأدمن لشحن الرصيد بالـ ID
 // ====================================================
 class AdminDepositScreen extends StatefulWidget {
   const AdminDepositScreen({super.key});
@@ -645,7 +645,7 @@ class RoomsFeedTab extends StatelessWidget {
 }
 
 // ====================================================
-// 5. البروفايل الفاخر مع الإطارات المتحركة
+// 5. البروفايل الفاخر مع دعم استدعاء التصميمات الحقيقية والإطارات
 // ====================================================
 class ProfileWalletTab extends StatefulWidget {
   final VoidCallback onStateChanged;
@@ -690,9 +690,9 @@ class _ProfileWalletTabState extends State<ProfileWalletTab> with SingleTickerPr
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('تخصيص الإطارات المتحركة والأوسمة 👑', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+              const Text('تخصيص الإطارات الحقيقية والأوسمة 👑', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
               const SizedBox(height: 6),
-              const Text('اختر الإطار الأسطوري ليحيط بصورتك ويظهر للجميع:', style: TextStyle(color: Colors.white54, fontSize: 12)),
+              const Text('اختر الإطار الأسطوري ليحيط بصورتك في التطبيق:', style: TextStyle(color: Colors.white54, fontSize: 12)),
               const SizedBox(height: 16),
               Expanded(
                 child: ListView.builder(
@@ -731,6 +731,7 @@ class _ProfileWalletTabState extends State<ProfileWalletTab> with SingleTickerPr
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
+            // تصميم صورة البروفايل محاطة بالإطار المتحرك (جاهز لعرض صور الـ Assets الحقيقية)
             AnimatedBuilder(
               animation: _animController,
               builder: (context, child) {
@@ -753,7 +754,12 @@ class _ProfileWalletTabState extends State<ProfileWalletTab> with SingleTickerPr
                   child: const CircleAvatar(
                     radius: 50,
                     backgroundColor: Colors.black,
-                    child: CircleAvatar(radius: 46, backgroundColor: Colors.pinkAccent, child: Icon(Icons.person, size: 55, color: Colors.white)),
+                    child: CircleAvatar(
+                      radius: 46,
+                      backgroundColor: Colors.pinkAccent,
+                      // يمكنك لاحقاً استبدال الأيقونة بـ Image.asset('assets/images/your_avatar.png')
+                      child: Icon(Icons.person, size: 55, color: Colors.white),
+                    ),
                   ),
                 );
               },
@@ -818,7 +824,7 @@ class _ProfileWalletTabState extends State<ProfileWalletTab> with SingleTickerPr
 }
 
 // ====================================================
-// 6. غرفة البث مع المايكات التفاعلية الحقيقية الهادفة
+// 6. غرفة البث مع المايكات التفاعلية والهدايا المتحركة
 // ====================================================
 class DodiRoomScreen extends StatefulWidget {
   final String roomTitle;
@@ -836,7 +842,6 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
   ];
   String? _animatedGlobalBanner;
 
-  // حالة المايكات الـ 4 داخل الغرفة (اسم المستخدم على المايك، هل هو مكتوم، هل المايك فارغ)
   final List<Map<String, dynamic>> _micSlots = [
     {'user': 'استريمر أحمد (مضيف)', 'isMuted': false, 'isEmpty': false, 'isSpeaking': true},
     {'user': 'مكان فارغ (اضغط للصعود)', 'isMuted': false, 'isEmpty': true, 'isSpeaking': false},
@@ -852,7 +857,6 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
     });
   }
 
-  // التحكم التفاعلي عند الضغط على أي مايك
   void _onMicTapped(int index) {
     showModalBottomSheet(
       context: context,
@@ -1062,7 +1066,6 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
                       ],
                     ),
                   ),
-                  // المايكات التفاعلية الحقيقية التي تستجيب للضغط والصعود والكتم
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
                     child: Row(
