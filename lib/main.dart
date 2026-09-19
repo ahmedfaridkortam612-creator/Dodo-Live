@@ -10,7 +10,7 @@ class UserProfileModel {
   static String age = '28';
   static String gender = 'ذكر 👨';
   static String country = 'مصر 🇪🇬';
-  static int diamonds = 45000;
+  static int diamonds = 50000;
   static String selectedFrame = 'إطار الأسد الملكي الذهبي 🦁👑';
 }
 
@@ -33,7 +33,7 @@ class DodiLiveApp extends StatelessWidget {
 }
 
 // ====================================================
-// 1. شاشة التحميل الاحترافية (Splash Screen)
+// 1. شاشة البداية والتحميل (Splash Screen)
 // ====================================================
 class DodiSplashScreen extends StatefulWidget {
   const DodiSplashScreen({super.key});
@@ -43,13 +43,13 @@ class DodiSplashScreen extends StatefulWidget {
 }
 
 class _DodiSplashScreenState extends State<DodiSplashScreen> {
-  double _progressValue = 0.3;
+  double _progressValue = 0.4;
 
   @override
   void initState() {
     super.initState();
     Future.delayed(const Duration(milliseconds: 600), () {
-      if (mounted) setState(() => _progressValue = 0.7);
+      if (mounted) setState(() => _progressValue = 0.8);
     });
     Future.delayed(const Duration(milliseconds: 1400), () {
       if (mounted) setState(() => _progressValue = 1.0);
@@ -187,7 +187,7 @@ class DodiAuthScreen extends StatelessWidget {
 }
 
 // ====================================================
-// 3. شاشة إعداد البروفايل الشخصي الحقيقي
+// 3. شاشة إعداد البروفايل الشخصي
 // ====================================================
 class ProfileSetupScreen extends StatefulWidget {
   const ProfileSetupScreen({super.key});
@@ -645,7 +645,7 @@ class RoomsFeedTab extends StatelessWidget {
 }
 
 // ====================================================
-// 5. البروفايل الفاخر مع دعم استدعاء التصميمات الحقيقية والإطارات
+// 5. البروفايل الفاخر مع دعم استخدام الإطارات الرسومية
 // ====================================================
 class ProfileWalletTab extends StatefulWidget {
   final VoidCallback onStateChanged;
@@ -690,9 +690,9 @@ class _ProfileWalletTabState extends State<ProfileWalletTab> with SingleTickerPr
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('تخصيص الإطارات الحقيقية والأوسمة 👑', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+              const Text('تخصيص الإطارات الرسومية الفاخرة 👑', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
               const SizedBox(height: 6),
-              const Text('اختر الإطار الأسطوري ليحيط بصورتك في التطبيق:', style: TextStyle(color: Colors.white54, fontSize: 12)),
+              const Text('اختر الإطار الأسطوري ليحيط بصورتك بكل فخامة:', style: TextStyle(color: Colors.white54, fontSize: 12)),
               const SizedBox(height: 16),
               Expanded(
                 child: ListView.builder(
@@ -731,7 +731,7 @@ class _ProfileWalletTabState extends State<ProfileWalletTab> with SingleTickerPr
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-            // تصميم صورة البروفايل محاطة بالإطار المتحرك (جاهز لعرض صور الـ Assets الحقيقية)
+            // محاكاة إطار الصورة الفاخر (يمكن استبداله بـ Image.asset في حال رغبتك برفع صورك الخاصة لمجلد الـ assets)
             AnimatedBuilder(
               animation: _animController,
               builder: (context, child) {
@@ -757,7 +757,6 @@ class _ProfileWalletTabState extends State<ProfileWalletTab> with SingleTickerPr
                     child: CircleAvatar(
                       radius: 46,
                       backgroundColor: Colors.pinkAccent,
-                      // يمكنك لاحقاً استبدال الأيقونة بـ Image.asset('assets/images/your_avatar.png')
                       child: Icon(Icons.person, size: 55, color: Colors.white),
                     ),
                   ),
@@ -780,7 +779,7 @@ class _ProfileWalletTabState extends State<ProfileWalletTab> with SingleTickerPr
               child: OutlinedButton.icon(
                 style: OutlinedButton.styleFrom(foregroundColor: Colors.white, side: const BorderSide(color: Colors.pinkAccent), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)), padding: const EdgeInsets.symmetric(vertical: 12)),
                 icon: const Icon(Icons.star, color: Colors.amber),
-                label: const Text('تغيير الإطار المتحرك والأوسمة 🎨', style: TextStyle(fontWeight: FontWeight.bold)),
+                label: const Text('تغيير الإطار الرسومي والأوسمة 🎨', style: TextStyle(fontWeight: FontWeight.bold)),
                 onPressed: () => _showFramesDialog(context),
               ),
             ),
@@ -824,7 +823,7 @@ class _ProfileWalletTabState extends State<ProfileWalletTab> with SingleTickerPr
 }
 
 // ====================================================
-// 6. غرفة البث مع المايكات التفاعلية والهدايا المتحركة
+// 6. غرفة البث مع المايكات التفاعلية وشرايط الإعلانات الملكية
 // ====================================================
 class DodiRoomScreen extends StatefulWidget {
   final String roomTitle;
@@ -993,6 +992,7 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
         if (UserProfileModel.diamonds >= cost) {
           setState(() {
             UserProfileModel.diamonds -= cost;
+            // شريط إعلاني ملكي متحرك يظهر في أعلى الغرفة عند إرسال الهدايا الفخمة
             _animatedGlobalBanner = '🎉 تبريكات ملكية: ${UserProfileModel.name} أرسل ($giftName) المتحركة للغرفة!';
             _messages.add('🎁 أرسلت هدية متحركة: $giftName (-$cost ماسة)');
           });
