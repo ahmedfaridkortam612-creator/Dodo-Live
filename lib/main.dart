@@ -43,10 +43,12 @@ class _DodiSplashScreenState extends State<DodiSplashScreen> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const MainHomeScreen()),
-      );
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MainHomeScreen()),
+        );
+      }
     });
   }
 
@@ -71,7 +73,7 @@ class MainHomeScreen extends StatefulWidget {
 }
 
 class _MainHomeScreenState extends State<MainHomeScreen> {
-  int userLevel = 20;
+  final int userLevel = 20;
   final TextEditingController _commentController = TextEditingController();
   final List<Map<String, dynamic>> _comments = [
     {
