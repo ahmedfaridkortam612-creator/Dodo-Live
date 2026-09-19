@@ -17,13 +17,16 @@ class DodiLiveApp extends StatelessWidget {
         brightness: Brightness.dark,
         scaffoldBackgroundColor: const Color(0xFF120B22),
       ),
-      home: const DodiLoginScreen(),
+      home: const DodiAuthScreen(),
     );
   }
 }
 
-class DodiLoginScreen extends StatelessWidget {
-  const DodiLoginScreen({super.key});
+// ====================================================
+// 1. شاشة تسجيل الدخول الاحترافية (Google & Phone Auth)
+// ====================================================
+class DodiAuthScreen extends StatelessWidget {
+  const DodiAuthScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -43,40 +46,218 @@ class DodiLoginScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Spacer(),
-                const Icon(Icons.live_tv, size: 90, color: Colors.pinkAccent),
+                const Icon(Icons.live_tv_rounded, size: 100, color: Colors.pinkAccent),
                 const SizedBox(height: 16),
                 const Text(
                   'Dodi Live',
-                  style: TextStyle(fontSize: 38, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: 2),
+                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: 2),
                 ),
                 const SizedBox(height: 8),
                 const Text(
-                  'منصة البث المباشر والمجتمع التفاعلي الفاخر',
+                  'عالمك الخاص من البث المباشر والمجتمع الفاخر',
                   style: TextStyle(fontSize: 14, color: Colors.white60),
+                  textAlign: TextAlign.center,
                 ),
                 const Spacer(),
+                // زر تسجيل الدخول برقم الهاتف
                 SizedBox(
                   width: double.infinity,
-                  height: 54,
-                  child: ElevatedButton(
+                  height: 52,
+                  child: ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.pink,
                       foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(27)),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
                     ),
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const DodiMainHomeScreen()),
-                      );
+                      _navigateToProfileSetup(context);
                     },
-                    child: const Text('دخول المنصة والمجتمع 🚀', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    icon: const Icon(Icons.phone_android),
+                    label: const Text('تسجيل الدخول برقم الهاتف 📱', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 16),
+                // زر تسجيل الدخول بجيميل
+                SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.pinkAccent, width: 1.5),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
+                    ),
+                    onPressed: () {
+                      _navigateToProfileSetup(context);
+                    },
+                    icon: const Icon(Icons.g_mobiledata, size: 30, color: Colors.amber),
+                    label: const Text('المتابعة بحساب Google 🌐', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                  ),
+                ),
+                const SizedBox(height: 30),
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  void _navigateToProfileSetup(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const ProfileSetupScreen()),
+    );
+  }
+}
+
+// ====================================================
+// 2. شاشة إعداد البروفايل الشخصي (الاسم، السن، النوع، الدولة)
+// ====================================================
+class ProfileSetupScreen extends StatefulWidget {
+  const ProfileSetupScreen({super.key});
+
+  @override
+  State<ProfileSetupScreen> createState() => _ProfileSetupScreenState();
+}
+
+class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
+  final TextEditingController _nameController = TextEditingController(text: 'مهندس أحمد الملك');
+  final TextEditingController _ageController = TextEditingController(text: '28');
+  String _selectedGender = 'ذكر 👨';
+  String _selectedCountry = 'مصر 🇪🇬';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('إعداد الملف الشخصي ✨'),
+        backgroundColor: const Color(0xFF1A0933),
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF2A0845), Color(0xFF120B22)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: ListView(
+          padding: const EdgeInsets.all(20),
+          children: [
+            Center(
+              child: Stack(
+                children: [
+                  Container(
+                    width: 110,
+                    height: 110,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.amber, width: 3),
+                    ),
+                    child: const CircleAvatar(
+                      radius: 50,
+                      backgroundColor: Colors.pinkAccent,
+                      child: Icon(Icons.person, size: 60, color: Colors.white),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.amber,
+                      radius: 18,
+                      child: IconButton(
+                        icon: const Icon(Icons.camera_alt, size: 16, color: Colors.black),
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('📸 تم اختيار رفع الصورة الشخصية بنجاح!')),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+            TextField(
+              controller: _nameController,
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: 'اسم المستخدم المستعار',
+                labelStyle: const TextStyle(color: Colors.white70),
+                filled: true,
+                fillColor: Colors.black45,
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _ageController,
+              keyboardType: TextInputType.number,
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: 'العمر (السن)',
+                labelStyle: const TextStyle(color: Colors.white70),
+                filled: true,
+                fillColor: Colors.black45,
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+              ),
+            ),
+            const SizedBox(height: 16),
+            DropdownButtonFormField<String>(
+              value: _selectedGender,
+              dropdownColor: const Color(0xFF1A0933),
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: 'النوع',
+                labelStyle: const TextStyle(color: Colors.white70),
+                filled: true,
+                fillColor: Colors.black45,
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+              ),
+              items: ['ذكر 👨', 'أنثى 👩'].map((String value) {
+                return DropdownMenuItem<String>(value: value, child: Text(value));
+              }).toList(),
+              onChanged: (newValue) => setState(() => _selectedGender = newValue!),
+            ),
+            const SizedBox(height: 16),
+            DropdownButtonFormField<String>(
+              value: _selectedCountry,
+              dropdownColor: const Color(0xFF1A0933),
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: 'الدولة',
+                labelStyle: const TextStyle(color: Colors.white70),
+                filled: true,
+                fillColor: Colors.black45,
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+              ),
+              items: ['مصر 🇪🇬', 'السعودية 🇸🇦', 'الإمارات 🇦🇪', 'الكويت 🇰🇼', 'المغرب 🇲🇦'].map((String value) {
+                return DropdownMenuItem<String>(value: value, child: Text(value));
+              }).toList(),
+              onChanged: (newValue) => setState(() => _selectedCountry = newValue!),
+            ),
+            const SizedBox(height: 35),
+            SizedBox(
+              width: double.infinity,
+              height: 52,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.pink,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
+                ),
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const DodiMainHomeScreen()),
+                  );
+                },
+                child: const Text('حفظ والدخول للمجتمع 🚀', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -92,8 +273,8 @@ class DodiMainHomeScreen extends StatefulWidget {
 
 class _DodiMainHomeScreenState extends State<DodiMainHomeScreen> {
   int _currentIndex = 0;
-  int _userDiamonds = 6500;
-  String _selectedFrame = 'إطار التاج الملكي 👑';
+  int _userDiamonds = 12500;
+  String _selectedFrame = 'إطار الأسد الملكي الذهبي 🦁👑';
   final List<Map<String, String>> _rooms = [
     {'title': 'غرفة الملوك والنجوم والتحديات ✨', 'host': 'استريمر أحمد', 'viewers': '1.5K', 'category': 'تحديات'},
     {'title': 'جلسة طرب وأغاني طربية 🎤', 'host': 'سارة الملكية', 'viewers': '890', 'category': 'موسيقى'},
@@ -113,9 +294,7 @@ class _DodiMainHomeScreenState extends State<DodiMainHomeScreen> {
   }
 
   void _addDiamonds(int amount) {
-    setState(() {
-      _userDiamonds += amount;
-    });
+    setState(() => _userDiamonds += amount);
   }
 
   @override
@@ -144,12 +323,9 @@ class _DodiMainHomeScreenState extends State<DodiMainHomeScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.admin_panel_settings, color: Colors.amber, size: 26),
-            tooltip: 'لوحة الشحن اليدوي للمستخدمين',
+            tooltip: 'لوحة التحكم الإداري',
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const AdminDepositScreen()),
-              );
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminDepositScreen()));
             },
           ),
         ],
@@ -171,6 +347,9 @@ class _DodiMainHomeScreenState extends State<DodiMainHomeScreen> {
   }
 }
 
+// ====================================================
+// 3. لوحة تحكم الشحن اليدوي (Admin Dashboard)
+// ====================================================
 class AdminDepositScreen extends StatefulWidget {
   const AdminDepositScreen({super.key});
 
@@ -183,107 +362,58 @@ class _AdminDepositScreenState extends State<AdminDepositScreen> {
   final TextEditingController _amountController = TextEditingController();
   bool _isLoading = false;
 
-  void _processManualDeposit() async {
-    String userId = _userIdController.text.trim();
-    String amountStr = _amountController.text.trim();
-
-    if (userId.isEmpty || amountStr.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('الرجاء إدخال إي دي المستخدم وكمية الكوينز بدقة!')),
-      );
+  void _processDeposit() async {
+    if (_userIdController.text.trim().isEmpty || _amountController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('الرجاء إدخال إي دي المستخدم والكمية بدقة!')));
       return;
     }
-
-    int? amount = int.tryParse(amountStr);
-    if (amount == null || amount <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('الرجاء إدخال رقم صحيح للكوينز')),
-      );
-      return;
-    }
-
     setState(() => _isLoading = true);
-
-    try {
-      await Future.delayed(const Duration(seconds: 1));
-
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('✅ تمت إضافة $amount كوينز بنجاح لحساب المستخدم ID: $userId')),
-      );
-
-      _userIdController.clear();
-      _amountController.clear();
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('❌ حدث خطأ أثناء المعالجة: $e')),
-      );
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
-    }
+    await Future.delayed(const Duration(seconds: 1));
+    setState(() => _isLoading = false);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('✅ تمت إضافة ${_amountController.text} كوينز بنجاح للـ ID: ${_userIdController.text}')),
+    );
+    _userIdController.clear();
+    _amountController.clear();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('لوحة الشحن الإداري اليدوي ⚡', style: TextStyle(fontSize: 16)),
-        backgroundColor: const Color(0xFF1A0933),
-      ),
+      appBar: AppBar(title: const Text('لوحة تحكم الأدمن (شحن فوري) ⚡'), backgroundColor: const Color(0xFF1A0933)),
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFF2A0845), Color(0xFF120B22)],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
+          gradient: LinearGradient(colors: [Color(0xFF2A0845), Color(0xFF120B22)], begin: Alignment.topCenter, end: Alignment.bottomCenter),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('إدارة شحن المستخدمين الفورية', style: TextStyle(color: Colors.amber, fontSize: 18, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-              const Text('أدخل المعرف الفريد للمستخدم (User ID) وكمية الكوينز المراد إضافتها بعد التحويل:', style: TextStyle(color: Colors.white54, fontSize: 12)),
-              const SizedBox(height: 24),
+              const Text('شحن رصيد المستخدمين يدوياً', style: TextStyle(color: Colors.amber, fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 6),
+              const Text('أدخل معرف المستخدم (User ID) وعدد الكوينز بعد التحويل البنكي:', style: TextStyle(color: Colors.white54, fontSize: 12)),
+              const SizedBox(height: 20),
               TextField(
                 controller: _userIdController,
                 style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  labelText: 'معرف المستخدم (User ID)',
-                  labelStyle: const TextStyle(color: Colors.white70),
-                  filled: true,
-                  fillColor: Colors.black45,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
-                ),
+                decoration: InputDecoration(labelText: 'معرف المستخدم (User ID)', filled: true, fillColor: Colors.black45, border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none)),
               ),
               const SizedBox(height: 16),
               TextField(
                 controller: _amountController,
                 keyboardType: TextInputType.number,
                 style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  labelText: 'كمية الكوينز / الماسات',
-                  labelStyle: const TextStyle(color: Colors.white70),
-                  filled: true,
-                  fillColor: Colors.black45,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
-                ),
+                decoration: InputDecoration(labelText: 'كمية الكوينز المراد إضافتها', filled: true, fillColor: Colors.black45, border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none)),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 25),
               SizedBox(
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.pink,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                  ),
-                  onPressed: _isLoading ? null : _processManualDeposit,
-                  child: _isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text('تنفيذ وإضافة الرصيد للمستخدم 🚀', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.pink, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))),
+                  onPressed: _isLoading ? null : _processDeposit,
+                  child: _isLoading ? const CircularProgressIndicator(color: Colors.white) : const Text('تنفيذ الشحن وإرسال الكوينز 🚀', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                 ),
               ),
             ],
@@ -391,10 +521,7 @@ class RoomsFeedTab extends StatelessWidget {
               TextField(
                 controller: titleController,
                 style: const TextStyle(color: Colors.white),
-                decoration: const InputDecoration(
-                  hintText: 'عنوان الغرفة (مثلاً: سهرة تحديات الماس)',
-                  hintStyle: TextStyle(color: Colors.white54),
-                ),
+                decoration: const InputDecoration(hintText: 'عنوان الغرفة (مثلاً: سهرة تحديات الماس)', hintStyle: TextStyle(color: Colors.white54)),
               ),
               const SizedBox(height: 16),
               const Text('اختر التصنيف:', style: TextStyle(color: Colors.white70, fontSize: 12)),
@@ -403,12 +530,8 @@ class RoomsFeedTab extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: ['تحديات', 'ألعاب', 'موسيقى', 'دردشة'].map((cat) {
                   return ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: selectedCategory == cat ? Colors.pink : Colors.black45,
-                    ),
-                    onPressed: () {
-                      selectedCategory = cat;
-                    },
+                    style: ElevatedButton.styleFrom(backgroundColor: selectedCategory == cat ? Colors.pink : Colors.black45),
+                    onPressed: () => selectedCategory = cat,
                     child: Text(cat, style: const TextStyle(color: Colors.white, fontSize: 11)),
                   );
                 }).toList(),
@@ -416,10 +539,7 @@ class RoomsFeedTab extends StatelessWidget {
             ],
           ),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('إلغاء', style: TextStyle(color: Colors.white54)),
-            ),
+            TextButton(onPressed: () => Navigator.pop(context), child: const Text('إلغاء', style: TextStyle(color: Colors.white54))),
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.pink),
               onPressed: () {
@@ -451,12 +571,7 @@ class RoomsFeedTab extends StatelessWidget {
                 Row(
                   children: [
                     ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.pink,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                      ),
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.pink, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
                       icon: const Icon(Icons.add, size: 16),
                       label: const Text('افتح غرفتك', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
                       onPressed: () => _showCreateRoomDialog(context),
@@ -485,31 +600,17 @@ class RoomsFeedTab extends StatelessWidget {
             const SizedBox(height: 16),
             Expanded(
               child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  childAspectRatio: 0.85,
-                ),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 12, mainAxisSpacing: 12, childAspectRatio: 0.85),
                 itemCount: rooms.length,
                 itemBuilder: (context, index) {
                   final room = rooms[index];
                   return InkWell(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DodiRoomScreen(roomTitle: room['title']!, diamonds: userDiamonds),
-                        ),
-                      );
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => DodiRoomScreen(roomTitle: room['title']!, diamonds: userDiamonds)));
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFF2A0845), Color(0xFF160B28)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
+                        gradient: const LinearGradient(colors: [Color(0xFF2A0845), Color(0xFF160B28)], begin: Alignment.topLeft, end: Alignment.bottomRight),
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(color: Colors.pink.withOpacity(0.3)),
                       ),
@@ -535,9 +636,7 @@ class RoomsFeedTab extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const Center(
-                            child: Icon(Icons.mic_external_on, size: 40, color: Colors.amber),
-                          ),
+                          const Center(child: Icon(Icons.mic_external_on, size: 40, color: Colors.amber)),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -560,6 +659,9 @@ class RoomsFeedTab extends StatelessWidget {
   }
 }
 
+// ====================================================
+// 4. البروفايل وتخصيص إطارات الحسابات المرتبة (من الفخم للأفخم)
+// ====================================================
 class ProfileWalletTab extends StatelessWidget {
   final int diamonds;
   final String selectedFrame;
@@ -574,180 +676,30 @@ class ProfileWalletTab extends StatelessWidget {
     required this.onFrameChanged,
   });
 
-  void _showRechargeModal(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: const Color(0xFF1A0933),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-      ),
-      builder: (context) {
-        return FractionallySizedBox(
-          heightFactor: 0.7,
-          child: Padding(
-            padding: EdgeInsets.only(
-              left: 20,
-              right: 20,
-              top: 20,
-              bottom: MediaQuery.of(context).viewInsets.bottom + 20,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text('مركز شحن الألماس والكوينز 💎', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
-                    IconButton(
-                      icon: const Icon(Icons.close, color: Colors.white54),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                const Text('اختر باقة الشحن أو استخدم قسيمة شحن فورية:', style: TextStyle(color: Colors.white54, fontSize: 12)),
-                const SizedBox(height: 16),
-                
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.black45,
-                    borderRadius: BorderRadius.circular(15),
-                    border: Border.all(color: Colors.pink.withOpacity(0.4)),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          style: const TextStyle(color: Colors.white, fontSize: 13),
-                          decoration: const InputDecoration(
-                            hintText: 'أدخل كود قسيمة الشحن (Voucher)',
-                            hintStyle: TextStyle(color: Colors.white38, fontSize: 12),
-                            border: InputBorder.none,
-                            isDense: true,
-                          ),
-                          onSubmitted: (code) {
-                            if (code.trim().isNotEmpty) {
-                              onCharge(15000);
-                              Navigator.pop(context);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('🎉 تم شحن 15,000 ماسة بنجاح!')),
-                              );
-                            }
-                          },
-                        ),
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.pink,
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                        ),
-                        onPressed: () {
-                          onCharge(15000);
-                          Navigator.pop(context);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('🎉 تم إضافة 15,000 ماسة بنجاح!')),
-                          );
-                        },
-                        child: const Text('تفعيل', style: TextStyle(fontSize: 11, color: Colors.white)),
-                      ),
-                    ],
-                  ),
-                ),
-                
-                const SizedBox(height: 16),
-                const Text('باقات الشحن السريع:', style: TextStyle(color: Colors.white70, fontSize: 13, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 10),
-
-                Expanded(
-                  child: ListView(
-                    children: [
-                      _buildRechargePackageItem(context, 'باقة المبتدئين 🌟', '1,500 ماسة', r'0.10$', 1500, Colors.purpleAccent),
-                      _buildRechargePackageItem(context, 'باقة النجوم ✨', '15,000 ماسة (1 دولار)', r'1.00$', 15000, Colors.blueAccent),
-                      _buildRechargePackageItem(context, 'باقة الملوك 👑', '75,000 ماسة', r'5.00$', 75000, Colors.pink),
-                      _buildRechargePackageItem(context, 'باقة الأساطير 💎⚡', '150,000 ماسة', r'10.00$', 150000, Colors.amber),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildRechargePackageItem(BuildContext context, String title, String subtitle, String price, int addedDiamonds, Color color) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: Colors.purple.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: color.withOpacity(0.6)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              const Icon(Icons.diamond, color: Colors.amber, size: 26),
-              const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
-                  const SizedBox(height: 2),
-                  Text(subtitle, style: const TextStyle(color: Colors.white60, fontSize: 11)),
-                ],
-              ),
-            ],
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: color,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            ),
-            onPressed: () {
-              onCharge(addedDiamonds);
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('✅ تمت إضافة ($addedDiamonds ماسة)!')),
-              );
-            },
-            child: Text(price, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-          ),
-        ],
-      ),
-    );
-  }
-
   void _showFramesDialog(BuildContext context) {
+    // قائمة الإطارات مرتبة حسب الأفخم استناداً للتصميمات التي أرسلتها
     final List<Map<String, dynamic>> frames = [
-      {'name': 'إطار التاج الملكي 👑', 'color': Colors.amber, 'desc': 'متاح لأصحاب وسام SVIP'},
-      {'name': 'إطار الأساطير المضيء ⚡', 'color': Colors.blueAccent, 'desc': 'يمنحك حضوراً خاطفاً'},
-      {'name': 'إطار وردة الجوري الفاخر 🌹', 'color': Colors.pinkAccent, 'desc': 'مخصص للداعمين الكبار'},
+      {'name': 'إطار الأسد الملكي الذهبي 🦁👑', 'color': Colors.amber, 'desc': 'الأفخم والأكثر هيبة (VIP الأعلى)'},
+      {'name': 'إطار التنانين المزدوجة النارية 🐉🔥', 'color': Colors.blueAccent, 'desc': 'تصميم أسطوري خاص بالملوك'},
+      {'name': 'إطار الـ Admin الفاخر ⚡', 'color': Colors.redAccent, 'desc': 'مخصص لإدارة التطبيق العليا'},
+      {'name': 'إطار الأجنحة الملكية الوردية ✨', 'color': Colors.purpleAccent, 'desc': 'للداعمين الكبار بالمستويات العليا'},
+      {'name': 'إطار مستويات البرونزية (Lv.1 - 10) 🥉', 'color': Colors.brown, 'desc': 'مستوى البداية والتدرج'},
     ];
 
     showModalBottomSheet(
       context: context,
       backgroundColor: const Color(0xFF1A0933),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
       builder: (context) {
         return Container(
           padding: const EdgeInsets.all(20),
-          height: 300,
+          height: 380,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('تخصيص إطار البروفايل والألقاب ✨', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+              const Text('تخصيص إطارات الحسابات والألقاب الملكية 👑', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
               const SizedBox(height: 6),
-              const Text('اختر الإطار الذي يظهر على صورتك:', style: TextStyle(color: Colors.white54, fontSize: 12)),
+              const Text('اختر الإطار الأسطوري ليظهر على صورتك في الغرف:', style: TextStyle(color: Colors.white54, fontSize: 12)),
               const SizedBox(height: 16),
               Expanded(
                 child: ListView.builder(
@@ -756,16 +708,11 @@ class ProfileWalletTab extends StatelessWidget {
                     final frame = frames[index];
                     bool isSelected = selectedFrame == frame['name'];
                     return ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: frame['color'] as Color,
-                        child: const Icon(Icons.person, color: Colors.black),
-                      ),
-                      title: Text(frame['name'] as String, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                      leading: CircleAvatar(backgroundColor: frame['color'] as Color, child: const Icon(Icons.star, color: Colors.black)),
+                      title: Text(frame['name'] as String, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
                       subtitle: Text(frame['desc'] as String, style: const TextStyle(color: Colors.white54, fontSize: 11)),
                       trailing: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: isSelected ? Colors.green : Colors.pink,
-                        ),
+                        style: ElevatedButton.styleFrom(backgroundColor: isSelected ? Colors.green : Colors.pink),
                         onPressed: () {
                           onFrameChanged(frame['name'] as String);
                           Navigator.pop(context);
@@ -794,27 +741,24 @@ class ProfileWalletTab extends StatelessWidget {
               alignment: Alignment.center,
               children: [
                 Container(
-                  width: 104,
-                  height: 104,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.amber, width: 3),
-                  ),
+                  width: 110,
+                  height: 110,
+                  decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.amber, width: 3)),
                 ),
                 const CircleAvatar(
-                  radius: 46,
+                  radius: 48,
                   backgroundColor: Colors.pinkAccent,
                   child: Icon(Icons.person, size: 55, color: Colors.white),
                 ),
               ],
             ),
             const SizedBox(height: 16),
-            const Text('مهندس أحمد الملك 👑', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
+            const Text('مهندس أحمد الملك 🦁', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
             const SizedBox(height: 4),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(color: Colors.amber.withOpacity(0.2), borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.amber)),
-              child: Text('وسام SVIP أسطوري ✨ | $selectedFrame', style: const TextStyle(color: Colors.amber, fontSize: 11, fontWeight: FontWeight.bold)),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+              decoration: BoxDecoration(color: Colors.amber.withOpacity(0.2), borderRadius: BorderRadius.circular(12), border: Border.all(color: Colors.amber)),
+              child: Text('وسام SVIP أسطوري ✨ | $selectedFrame', style: const TextStyle(color: Colors.amber, fontSize: 11, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
             ),
             const SizedBox(height: 20),
             SizedBox(
@@ -827,7 +771,7 @@ class ProfileWalletTab extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 12),
                 ),
                 icon: const Icon(Icons.star, color: Colors.amber),
-                label: const Text('تغيير إطار البروفايل والشارات 🎨', style: TextStyle(fontWeight: FontWeight.bold)),
+                label: const Text('تغيير الإطار الملكي والأوسمة 🎨', style: TextStyle(fontWeight: FontWeight.bold)),
                 onPressed: () => _showFramesDialog(context),
               ),
             ),
@@ -849,20 +793,19 @@ class ProfileWalletTab extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('رصيد الماسات 💎', style: TextStyle(color: Colors.white60, fontSize: 12)),
+                          const Text('رصيد الألماس 💎', style: TextStyle(color: Colors.white60, fontSize: 12)),
                           Text('$diamonds ماسة', style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
                         ],
                       ),
                     ],
                   ),
                   ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.amber,
-                      foregroundColor: Colors.black,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                    ),
-                    onPressed: () => _showRechargeModal(context),
-                    child: const Text('شحن ⚡', style: TextStyle(fontWeight: FontWeight.bold)),
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.amber, foregroundColor: Colors.black, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+                    onPressed: () {
+                      onCharge(15000);
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('⚡ تم شحن 15,000 ماسة بنجاح!')));
+                    },
+                    child: const Text('شحن فوري ⚡', style: TextStyle(fontWeight: FontWeight.bold)),
                   ),
                 ],
               ),
@@ -874,6 +817,9 @@ class ProfileWalletTab extends StatelessWidget {
   }
 }
 
+// ====================================================
+// 5. غرفة البث مع الهدايا المتحركة وشرايط البث الإعلانية المتحركة
+// ====================================================
 class DodiRoomScreen extends StatefulWidget {
   final String roomTitle;
   final int diamonds;
@@ -887,10 +833,10 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
   final TextEditingController _msgController = TextEditingController();
   final List<String> _messages = [
     'أهلاً بالجميع في الغرفة التفاعلية الأسطورية 👑',
-    'استعدوا لمسابقات وألعاب الحظ الآن! 🎲',
+    'استعدوا لمسابقات وهدايا القصور الطائرة الآن! 🏰',
   ];
   late int _userDiamonds;
-  String? _activeGlobalAlert;
+  String? _animatedGlobalBanner; // الشريط المتحرك العلوي للهدايا
 
   @override
   void initState() {
@@ -906,98 +852,22 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
     });
   }
 
-  void _showMiniGamesDialog() {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: const Color(0xFF1A0933),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return Container(
-          padding: const EdgeInsets.all(20),
-          height: 260,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('ألعاب الغرفة التفاعلية ومسابقات الحظ 🎲', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
-              const SizedBox(height: 6),
-              const Text('اختر اللعبة وشارك المايكات حماسة التحدي:', style: TextStyle(color: Colors.white54, fontSize: 12)),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildGameCard('تحدي الأسد 🦁', 200, Colors.amber),
-                  _buildGameCard('سحب الأوليمبس ⚡', 500, Colors.blueAccent),
-                  _buildGameCard('عجلة الحظ 🎡', 100, Colors.pinkAccent),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildGameCard(String gameName, int cost, Color color) {
-    return InkWell(
-      onTap: () {
-        Navigator.pop(context);
-        if (_userDiamonds >= cost) {
-          setState(() {
-            _userDiamonds -= cost;
-            _activeGlobalAlert = '🎉 مهندس أحمد شارك في ($gameName) وربح مضاعفة الماسات!';
-            _messages.add('🎲 شاركت في لعبة ($gameName) وتكلفت (-$cost ماسة)');
-          });
-          Future.delayed(const Duration(seconds: 4), () {
-            if (mounted) setState(() => _activeGlobalAlert = null);
-          });
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('رصيد الماسات غير كافٍ للمشاركة في اللعبة!')),
-          );
-        }
-      },
-      child: Container(
-        width: 100,
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.black45,
-          borderRadius: BorderRadius.circular(15),
-          border: Border.all(color: color, width: 1.5),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.gamepad, color: color, size: 28),
-            const SizedBox(height: 8),
-            Text(gameName, style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
-            const SizedBox(height: 4),
-            Text('$cost 💎', style: const TextStyle(color: Colors.amber, fontSize: 10)),
-          ],
-        ),
-      ),
-    );
-  }
-
   void _showGiftsDialog() {
     showModalBottomSheet(
       context: context,
       backgroundColor: const Color(0xFF1A0933),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (context) {
         return Container(
           padding: const EdgeInsets.all(20),
-          height: 280,
+          height: 300,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('اختر هدية ملكية عائمة 🎁', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                  const Text('إرسال الهدايا المتحركة الفخمة 🎁✨', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
                   Row(
                     children: [
                       const Icon(Icons.diamond, color: Colors.amber, size: 18),
@@ -1007,16 +877,16 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
               Expanded(
                 child: GridView.count(
                   crossAxisCount: 3,
                   crossAxisSpacing: 12,
                   mainAxisSpacing: 12,
                   children: [
-                    _buildGiftItem('🌹 وردة ملكية', 100, Colors.pink),
-                    _buildGiftItem('🏎️ سيارة رياضية', 500, Colors.blue),
-                    _buildGiftItem('🏰 قصر أسطوري', 2000, Colors.amber),
+                    _buildAnimatedGiftItem('🌹 وردة جوري', 100, Colors.pink),
+                    _buildAnimatedGiftItem('🏎️ سيارة رياضية', 1000, Colors.blue),
+                    _buildAnimatedGiftItem('🏰 القصر الأسطوري', 5000, Colors.amber),
                   ],
                 ),
               ),
@@ -1027,35 +897,34 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
     );
   }
 
-  Widget _buildGiftItem(String giftName, int cost, Color color) {
+  Widget _buildAnimatedGiftItem(String giftName, int cost, Color color) {
     return InkWell(
       onTap: () {
         Navigator.pop(context);
         if (_userDiamonds >= cost) {
           setState(() {
             _userDiamonds -= cost;
-            _activeGlobalAlert = '👑 إشعار ملكي: مهندس أحمد أرسل هدية ($giftName) للغرفة!';
-            _messages.add('🎁 أرسلت هدية فخمة: $giftName (-$cost ماسة)');
+            // تفعيل الشريط المتحرك العلوي مع تأثير صوتي/مرئي يحاكي Bigo وHago
+            _animatedGlobalBanner = '🎉 تبريكات ملكية: مهندس أحمد أرسل ($giftName) المتحركة للغرفة!';
+            _messages.add('🎁 أرسلت هدية متحركة: $giftName (-$cost ماسة)');
           });
-          Future.delayed(const Duration(seconds: 4), () {
-            if (mounted) setState(() => _activeGlobalAlert = null);
+          Future.delayed(const Duration(seconds: 5), () {
+            if (mounted) setState(() => _animatedGlobalBanner = null);
           });
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('رصيد الماسات غير كافٍ، قم بالشحن من المحفظة!')),
-          );
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('رصيد الألماس غير كافٍ!')));
         }
       },
       child: Container(
         decoration: BoxDecoration(
           color: Colors.black45,
           borderRadius: BorderRadius.circular(15),
-          border: Border.all(color: color.withOpacity(0.6), width: 1.5),
+          border: Border.all(color: color, width: 1.5),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(giftName.split(' ')[0], style: const TextStyle(fontSize: 28)),
+            Text(giftName.split(' ')[0], style: const TextStyle(fontSize: 32)),
             const SizedBox(height: 6),
             Text(giftName.split(' ').sublist(1).join(' '), style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold)),
             Text('$cost 💎', style: const TextStyle(color: Colors.amber, fontSize: 10)),
@@ -1070,11 +939,7 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFF1A0933), Color(0xFF0F071D)],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
+          gradient: LinearGradient(colors: [Color(0xFF1A0933), Color(0xFF0F071D)], begin: Alignment.topCenter, end: Alignment.bottomCenter),
         ),
         child: SafeArea(
           child: Stack(
@@ -1088,11 +953,7 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
                       children: [
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: Colors.black54,
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: Colors.pink.withOpacity(0.5)),
-                          ),
+                          decoration: BoxDecoration(color: Colors.black54, borderRadius: BorderRadius.circular(20), border: Border.all(color: Colors.pink.withOpacity(0.5))),
                           child: Row(
                             children: [
                               const CircleAvatar(radius: 12, backgroundColor: Colors.pink, child: Icon(Icons.star, size: 14, color: Colors.white)),
@@ -1115,10 +976,7 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
                               ),
                             ),
                             const SizedBox(width: 8),
-                            IconButton(
-                              icon: const Icon(Icons.close, color: Colors.white),
-                              onPressed: () => Navigator.pop(context),
-                            ),
+                            IconButton(icon: const Icon(Icons.close, color: Colors.white), onPressed: () => Navigator.pop(context)),
                           ],
                         ),
                       ],
@@ -1132,10 +990,7 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
                         children: [
                           Container(
                             padding: const EdgeInsets.all(2),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(color: index == 0 ? Colors.amber : Colors.purpleAccent, width: 2),
-                            ),
+                            decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: index == 0 ? Colors.amber : Colors.purpleAccent, width: 2)),
                             child: CircleAvatar(
                               radius: 28,
                               backgroundColor: Colors.black54,
@@ -1143,7 +998,7 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
                             ),
                           ),
                           const SizedBox(height: 6),
-                          Text(index == 0 ? 'مضيف SVIP' : 'مايك ${index + 1}', style: TextStyle(color: index == 0 ? Colors.amber : Colors.white70, fontSize: 10, fontWeight: FontWeight.bold)),
+                          Text(index == 0 ? 'مضيف VIP' : 'مايك ${index + 1}', style: TextStyle(color: index == 0 ? Colors.amber : Colors.white70, fontSize: 10, fontWeight: FontWeight.bold)),
                         ],
                       )),
                     ),
@@ -1157,14 +1012,8 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
                           return Container(
                             margin: const EdgeInsets.only(bottom: 8),
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                            decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.4),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              _messages[index],
-                              style: const TextStyle(color: Colors.white, fontSize: 13),
-                            ),
+                            decoration: BoxDecoration(color: Colors.black.withOpacity(0.4), borderRadius: BorderRadius.circular(12)),
+                            child: Text(_messages[index], style: const TextStyle(color: Colors.white, fontSize: 13)),
                           );
                         },
                       ),
@@ -1179,35 +1028,23 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
                             controller: _msgController,
                             style: const TextStyle(color: Colors.white),
                             decoration: InputDecoration(
-                              hintText: 'تحدث وتفاعل مع المجتمع...',
+                              hintText: 'تحدث وتفاعل مع أساطير الغرفة...',
                               hintStyle: const TextStyle(color: Colors.white54),
                               filled: true,
                               fillColor: Colors.black54,
                               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(25),
-                                borderSide: BorderSide.none,
-                              ),
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(25), borderSide: BorderSide.none),
                             ),
                             onSubmitted: (_) => _send(),
                           ),
                         ),
                         const SizedBox(width: 8),
                         CircleAvatar(
-                          backgroundColor: Colors.purple,
-                          child: IconButton(
-                            icon: const Icon(Icons.gamepad, color: Colors.amber, size: 18),
-                            onPressed: _showMiniGamesDialog,
-                            tooltip: 'ألعاب الغرفة',
-                          ),
-                        ),
-                        const SizedBox(width: 6),
-                        CircleAvatar(
                           backgroundColor: Colors.amber,
                           child: IconButton(
-                            icon: const Icon(Icons.card_giftcard, color: Colors.black, size: 18),
+                            icon: const Icon(Icons.card_giftcard, color: Colors.black, size: 20),
                             onPressed: _showGiftsDialog,
-                            tooltip: 'الهدايا الفاخرة',
+                            tooltip: 'الهدايا المتحركة',
                           ),
                         ),
                       ],
@@ -1215,25 +1052,30 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
                   ),
                 ],
               ),
-              if (_activeGlobalAlert != null)
+              // الشريط الإعلاني المتحرك العلوي (يحاكي هدايا بيجو وحوقو الفخمة)
+              if (_animatedGlobalBanner != null)
                 Positioned(
                   top: 70,
-                  left: 20,
-                  right: 20,
+                  left: 15,
+                  right: 15,
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     decoration: BoxDecoration(
-                      color: Colors.purple.shade900.withOpacity(0.95),
+                      gradient: const LinearGradient(colors: [Colors.amber, Colors.deepOrange]),
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.amber, width: 2),
-                      boxShadow: [
-                        BoxShadow(color: Colors.amber.withOpacity(0.4), blurRadius: 15, spreadRadius: 3),
-                      ],
+                      boxShadow: [BoxShadow(color: Colors.amber.withOpacity(0.6), blurRadius: 20, spreadRadius: 4)],
                     ),
-                    child: Text(
-                      _activeGlobalAlert!,
-                      style: const TextStyle(color: Colors.amber, fontSize: 13, fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center,
+                    child: Row(
+                      children: [
+                        const Icon(Icons.star, color: Colors.white, size: 24),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            _animatedGlobalBanner!,
+                            style: const TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
