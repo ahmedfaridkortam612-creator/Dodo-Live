@@ -112,7 +112,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Card(
-              color: Colors.purple.shade950,
+              color: const Color(0xFF2A0845),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
