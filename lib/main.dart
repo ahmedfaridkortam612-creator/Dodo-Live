@@ -4,7 +4,7 @@ void main() {
   runApp(const DodiLiveApp());
 }
 
-// Global User State Model to manage real user info across the app
+// نموذج بيانات المستخدم الحقيقي لتجنب أي شكل وهمي
 class UserProfileModel {
   static String name = 'مهندس أحمد الملك 🦁';
   static String age = '28';
@@ -27,13 +27,125 @@ class DodiLiveApp extends StatelessWidget {
         brightness: Brightness.dark,
         scaffoldBackgroundColor: const Color(0xFF120B22),
       ),
-      home: const DodiAuthScreen(),
+      home: const DodiSplashScreen(),
     );
   }
 }
 
 // ====================================================
-// 1. شاشة البداية وتسجيل الدخول الاحترافية
+// 1. شاشة البداية والتحميل (Splash Screen المماثلة لتصميمك)
+// ====================================================
+class DodiSplashScreen extends StatefulWidget {
+  const DodiSplashScreen({super.key});
+
+  @override
+  State<DodiSplashScreen> createState() => _DodiSplashScreenState();
+}
+
+class _DodiSplashScreenState extends State<DodiSplashScreen> with SingleTickerProviderStateMixin {
+  double _progressValue = 0.2;
+
+  @override
+  void initState() {
+    super.initState();
+    // محاكاة تحميل حقيقي واحترافي لشاشة البداية
+    Future.delayed(const Duration(milliseconds: 600), () {
+      if (mounted) setState(() => _progressValue = 0.6);
+    });
+    Future.delayed(const Duration(milliseconds: 1400), () {
+      if (mounted) setState(() => _progressValue = 0.9);
+    });
+    Future.delayed(const Duration(milliseconds: 2200), () {
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const DodiAuthScreen()),
+        );
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF3B0A4E), Color(0xFF1A0933), Color(0xFF0F071D)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 40),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Spacer(),
+                // شعار التطبيق الفاخر (الطير الملكي المجنح)
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      colors: [Colors.pinkAccent.withOpacity(0.3), Colors.amber.withOpacity(0.2)],
+                    ),
+                  ),
+                  child: const Icon(Icons.flutter_dash, size: 90, color: Colors.amberAccent),
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  'دودو لايف',
+                  style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: 1.5),
+                ),
+                const SizedBox(height: 4),
+                const Text(
+                  'Dodi live',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.amberAccent, letterSpacing: 2),
+                ),
+                const SizedBox(height: 12),
+                const Text(
+                  'عالمك الخاص من البث المباشر\nYour World of Live Streaming',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 13, color: Colors.white60, height: 1.4),
+                ),
+                const Spacer(),
+                // شريط التحميل الاحترافي المماثل للصورة
+                Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('جاري التحميل...\nLoading...', style: TextStyle(color: Colors.white70, fontSize: 12)),
+                        Text('${(_progressValue * 100).toInt()}%', style: const TextStyle(color: Colors.amberAccent, fontWeight: FontWeight.bold, fontSize: 14)),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: LinearProgressIndicator(
+                        value: _progressValue,
+                        minHeight: 8,
+                        backgroundColor: Colors.black45,
+                        valueColor: const AlwaysStoppedAnimation<Color>(Colors.amber),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ====================================================
+// 2. شاشة تسجيل الدخول الاحترافية (أيقونات الجيميل والهاتف)
 // ====================================================
 class DodiAuthScreen extends StatelessWidget {
   const DodiAuthScreen({super.key});
@@ -64,7 +176,7 @@ class DodiAuthScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 const Text(
-                  'عالمك الخاص من البث المباشر والمجتمع الفاخر',
+                  'تسجيل الدخول للمنصة والمجتمع الفاخر',
                   style: TextStyle(fontSize: 14, color: Colors.white60),
                   textAlign: TextAlign.center,
                 ),
@@ -109,7 +221,7 @@ class DodiAuthScreen extends StatelessWidget {
 }
 
 // ====================================================
-// 2. شاشة إعداد البروفايل الشخصي (الحفظ الحقيقي للبيانات)
+// 3. شاشة إعداد البروفايل (الاسم، السن، النوع، الدولة والصورة)
 // ====================================================
 class ProfileSetupScreen extends StatefulWidget {
   const ProfileSetupScreen({super.key});
@@ -127,7 +239,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('إعداد الملف الشخصي الفاخر ✨'), backgroundColor: const Color(0xFF1A0933)),
+      appBar: AppBar(title: const Text('إعداد الملف الشخصي الاحترافي ✨'), backgroundColor: const Color(0xFF1A0933)),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(colors: [Color(0xFF2A0845), Color(0xFF120B22)], begin: Alignment.topCenter, end: Alignment.bottomCenter),
@@ -152,7 +264,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                       radius: 18,
                       child: IconButton(
                         icon: const Icon(Icons.camera_alt, size: 16, color: Colors.black),
-                        onPressed: () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('📸 تم تحديث الصورة الشخصية بنجاح!'))),
+                        onPressed: () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('📸 تم رفع وتحديث الصورة الشخصية بنجاح!'))),
                       ),
                     ),
                   ),
@@ -163,14 +275,14 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
             TextField(
               controller: _nameController,
               style: const TextStyle(color: Colors.white),
-              decoration: InputDecoration(labelText: 'اسم المستخدم المستعار', filled: true, fillColor: Colors.black45, border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none)),
+              decoration: InputDecoration(labelText: 'الاسم المستعار للحساب', filled: true, fillColor: Colors.black45, border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none)),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: _ageController,
               keyboardType: TextInputType.number,
               style: const TextStyle(color: Colors.white),
-              decoration: InputDecoration(labelText: 'العمر', filled: true, fillColor: Colors.black45, border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none)),
+              decoration: InputDecoration(labelText: 'السن (العمر)', filled: true, fillColor: Colors.black45, border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none)),
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
@@ -276,7 +388,7 @@ class _DodiMainHomeScreenState extends State<DodiMainHomeScreen> {
 }
 
 // ====================================================
-// 3. لوحة تحكم الأدمن لشحن الرصيد الفوري بالـ ID
+// 4. لوحة تحكم الأدمن لشحن الرصيد الفوري
 // ====================================================
 class AdminDepositScreen extends StatefulWidget {
   const AdminDepositScreen({super.key});
@@ -318,7 +430,7 @@ class _AdminDepositScreenState extends State<AdminDepositScreen> {
             children: [
               const Text('شحن رصيد المستخدمين يدوياً بالـ ID', style: TextStyle(color: Colors.amber, fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 6),
-              const Text('أدخل معرف المستخدم وكمية الماسات بعد التحويل المالي:', style: TextStyle(color: Colors.white54, fontSize: 12)),
+              const Text('أدخل معرف المستخدم وكمية الماسات بعد التحويل:', style: TextStyle(color: Colors.white54, fontSize: 12)),
               const SizedBox(height: 20),
               TextField(
                 controller: _userIdController,
@@ -567,7 +679,7 @@ class RoomsFeedTab extends StatelessWidget {
 }
 
 // ====================================================
-// 4. البروفايل الشخصي الحقيقي وتخصيص الإطارات الملكية مرتبة
+// 5. البروفايل الشخصي وتخصيص الإطارات الملكية
 // ====================================================
 class ProfileWalletTab extends StatefulWidget {
   final VoidCallback onStateChanged;
@@ -584,7 +696,6 @@ class _ProfileWalletTabState extends State<ProfileWalletTab> {
       {'name': 'إطار التنانين المزدوجة النارية 🐉🔥', 'color': Colors.blueAccent, 'desc': 'تصميم أسطوري خاص بالملوك'},
       {'name': 'إطار الـ Admin الفاخر ⚡', 'color': Colors.redAccent, 'desc': 'مخصص لإدارة التطبيق العليا'},
       {'name': 'إطار الأجنحة الملكية الوردية ✨', 'color': Colors.purpleAccent, 'desc': 'للداعمين الكبار بالمستويات العليا'},
-      {'name': 'إطار مستويات البرونزية (Lv.1 - 10) 🥉', 'color': Colors.brown, 'desc': 'مستوى البداية والتدرج'},
     ];
 
     showModalBottomSheet(
@@ -594,7 +705,7 @@ class _ProfileWalletTabState extends State<ProfileWalletTab> {
       builder: (context) {
         return Container(
           padding: const EdgeInsets.all(20),
-          height: 380,
+          height: 350,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -615,9 +726,7 @@ class _ProfileWalletTabState extends State<ProfileWalletTab> {
                       trailing: ElevatedButton(
                         style: ElevatedButton.styleFrom(backgroundColor: isSelected ? Colors.green : Colors.pink),
                         onPressed: () {
-                          setState(() {
-                            UserProfileModel.selectedFrame = frame['name'];
-                          });
+                          setState(() => UserProfileModel.selectedFrame = frame['name']);
                           widget.onStateChanged();
                           Navigator.pop(context);
                         },
@@ -695,9 +804,7 @@ class _ProfileWalletTabState extends State<ProfileWalletTab> {
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(backgroundColor: Colors.amber, foregroundColor: Colors.black, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
                     onPressed: () {
-                      setState(() {
-                        UserProfileModel.diamonds += 15000;
-                      });
+                      setState(() => UserProfileModel.diamonds += 15000);
                       widget.onStateChanged();
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('⚡ تم شحن 15,000 ماسة بنجاح!')));
                     },
@@ -714,7 +821,7 @@ class _ProfileWalletTabState extends State<ProfileWalletTab> {
 }
 
 // ====================================================
-// 5. غرفة البث مع الهدايا المتحركة وشرايط الإعلانات المتحركة
+// 6. غرفة البث مع الهدايا المتحركة وشرايط البث العلوية
 // ====================================================
 class DodiRoomScreen extends StatefulWidget {
   final String roomTitle;
