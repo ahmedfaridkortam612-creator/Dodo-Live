@@ -661,7 +661,6 @@ class _ProfileWalletTabState extends State<ProfileWalletTab> with SingleTickerPr
   @override
   void initState() {
     super.initState();
-    // تحريك الإطار بشكل مستمر لإعطاء تأثير حواري متحرك ونابض (Animated Frame)
     _animController = AnimationController(vsync: this, duration: const Duration(seconds: 2))
       ..repeat(reverse: true);
   }
@@ -673,7 +672,6 @@ class _ProfileWalletTabState extends State<ProfileWalletTab> with SingleTickerPr
   }
 
   void _showFramesDialog(BuildContext context) {
-    // قائمة الإطارات المستوحاة من التصاميم التي أرسلتها (الأسد الملكي، الأدمن، التنانين، والمستويات)
     final List<Map<String, dynamic>> frames = [
       {'name': 'إطار الأسد الملكي الذهبي 🦁👑', 'color': Colors.amber, 'desc': 'الإطار الأسطوري الفخم للـ VIP'},
       {'name': 'إطار الأدمن الذهبي الملكي ⚡', 'color': Colors.redAccent, 'desc': 'مخصص للإدارة العليا بالتطبيق'},
@@ -694,7 +692,7 @@ class _ProfileWalletTabState extends State<ProfileWalletTab> with SingleTickerPr
             children: [
               const Text('تخصيص الإطارات المتحركة والأوسمة 👑', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
               const SizedBox(height: 6),
-              const Text('اختر الإطار الأسطوري ليتحيط بصورتك ويظهر للجميع:', style: TextStyle(color: Colors.white54, fontSize: 12)),
+              const Text('اختر الإطار الأسطوري ليحيط بصورتك ويظهر للجميع:', style: TextStyle(color: Colors.white54, fontSize: 12)),
               const SizedBox(height: 16),
               Expanded(
                 child: ListView.builder(
@@ -733,7 +731,6 @@ class _ProfileWalletTabState extends State<ProfileWalletTab> with SingleTickerPr
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-            // تصميم البروفايل مع تأثير الإطار المتحرك والنابض (Animated Frame Effect)
             AnimatedBuilder(
               animation: _animController,
               builder: (context, child) {
@@ -855,7 +852,7 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
       builder: (context) {
         return Container(
           padding: const EdgeInsets.all(20),
-          height: 300,
+          height: 320,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -882,6 +879,7 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
                     _buildAnimatedGiftItem('🌹 وردة جوري', 100, Colors.pink),
                     _buildAnimatedGiftItem('🏎️ سيارة رياضية', 1000, Colors.blue),
                     _buildAnimatedGiftItem('🏰 القصر الأسطوري', 5000, Colors.amber),
+                    _buildAnimatedGiftItem('🦁 أسد الغابة المجنح', 15000, Colors.deepOrange),
                   ],
                 ),
               ),
@@ -899,7 +897,6 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
         if (UserProfileModel.diamonds >= cost) {
           setState(() {
             UserProfileModel.diamonds -= cost;
-            // شريط إعلاني متحرك يعرض الهدية الفخمة في الغرفة بالكامل
             _animatedGlobalBanner = '🎉 تبريكات ملكية: ${UserProfileModel.name} أرسل ($giftName) المتحركة للغرفة!';
             _messages.add('🎁 أرسلت هدية متحركة: $giftName (-$cost ماسة)');
           });
@@ -907,7 +904,7 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
             if (mounted) setState(() => _animatedGlobalBanner = null);
           });
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('رصيد الألماس غير كافٍ!')));
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('⚠️ رصيد الألماس غير كافٍ!')));
         }
       },
       child: Container(
@@ -915,10 +912,10 @@ class _DodiRoomScreenState extends State<DodiRoomScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(giftName.split(' ')[0], style: const TextStyle(fontSize: 32)),
-            const SizedBox(height: 6),
-            Text(giftName.split(' ').sublist(1).join(' '), style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold)),
-            Text('$cost 💎', style: const TextStyle(color: Colors.amber, fontSize: 10)),
+            Text(giftName.split(' ')[0], style: const TextStyle(fontSize: 28)),
+            const SizedBox(height: 4),
+            Text(giftName.split(' ').sublist(1).join(' '), style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+            Text('$cost 💎', style: const TextStyle(color: Colors.amber, fontSize: 9)),
           ],
         ),
       ),
